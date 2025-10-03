@@ -9,10 +9,10 @@ import VectorSource from "ol/source/Vector"
 import Static from "ol/source/ImageStatic"
 import Feature from "ol/Feature"
 import Point from "ol/geom/Point"
-import { Circle, Fill, Stroke, Style, Icon, Text } from "ol/style"
+import {  Fill, Stroke, Style, Text } from "ol/style"
 import XYZ from "ol/source/XYZ"
-import { fromLonLat, transform } from "ol/proj"
-import { Pin, MapPin, X, Layers } from "lucide-react"
+import { fromLonLat } from "ol/proj"
+import { Layers } from "lucide-react"
 import { Species, Location, MapOverlay } from "@/types/api"
 import MarkerManager from "@/utils/marker-manager"
 import ViewportManager from "@/utils/viewport-manager"
@@ -62,6 +62,7 @@ export default function OLMap({
     const overlayLayerRef = useRef<ImageLayer<Static> | null>(null) // Keep reference to overlay layer
 
     // Initialize map
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         if (!mapRef.current) return
 
@@ -347,7 +348,7 @@ export default function OLMap({
                 map.getLayers().insertAt(insertIndex, overlayLayerRef.current)
             }
         }
-    }, [map, overlays.length]) // Only depend on map and overlays.length, not overlays content
+    }, [map, overlays]) // Depend on map and overlays
 
     // Control overlay visibility
     useEffect(() => {

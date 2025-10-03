@@ -1,15 +1,11 @@
 "use client"
 import { useState, useMemo, useEffect } from "react"
-import { ChevronLeft, ChevronRight, Calendar, Filter, X } from "lucide-react"
+import { ChevronLeft, ChevronRight, Calendar, X } from "lucide-react"
 import { Species, Location } from "@/types/api"
 
 interface BloomCalendarProps {
-    allSpecies: Species[]
     filteredLocations: Location[]
-    selectedSpeciesIds: number[]
     onDateSelect: (dates: Date[]) => void
-    onSpeciesFilter: (speciesIds: number[]) => void
-    onClearFilter: () => void
     onLocationFilter?: (locations: Location[], hasDateFilter: boolean) => void
     onClose?: () => void
 }
@@ -17,12 +13,8 @@ interface BloomCalendarProps {
 type CalendarView = "month" | "year"
 
 export default function BloomCalendar({
-    allSpecies,
     filteredLocations,
-    selectedSpeciesIds,
     onDateSelect,
-    onSpeciesFilter,
-    onClearFilter,
     onLocationFilter,
     onClose
 }: BloomCalendarProps) {
@@ -122,7 +114,6 @@ export default function BloomCalendar({
 
         if (date < startDate || date > endDate) return "none"
 
-        const totalDuration = endDate.getTime() - startDate.getTime()
         const peakPosition = peakDate.getTime() - startDate.getTime()
         const currentPosition = date.getTime() - startDate.getTime()
 
@@ -196,7 +187,6 @@ export default function BloomCalendar({
         const year = currentDate.getFullYear()
         const month = currentDate.getMonth()
         const firstDay = new Date(year, month, 1)
-        const lastDay = new Date(year, month + 1, 0)
         const startDate = new Date(firstDay)
         startDate.setDate(startDate.getDate() - firstDay.getDay())
 
@@ -237,7 +227,7 @@ export default function BloomCalendar({
         }
 
         return months
-    }, [currentDate, filteredLocations])
+    }, [currentDate, filteredLocations, monthNames])
 
     // Handle date selection with toggle support - click to select/deselect
     const handleDateClick = (date: Date) => {

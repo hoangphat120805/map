@@ -1,5 +1,5 @@
 "use client"
-import { Plus, Minus, Calendar } from "lucide-react"
+import { Calendar } from "lucide-react"
 
 interface OLMapControlsProps {
     onCalendarToggle?: () => void

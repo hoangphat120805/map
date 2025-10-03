@@ -3,7 +3,6 @@ import { useState, useEffect } from "react"
 import {
     X,
     MapPin,
-    Flower,
     Star,
     MessageCircle,
     Camera,
@@ -28,12 +27,7 @@ export default function MarkerDetailPanel({
     onClose,
     className = "fixed top-4 right-4 w-88 bg-white rounded-lg shadow-lg border border-gray-300 z-[1100] max-h-[90vh] overflow-y-auto"
 }: MarkerDetailPanelProps) {
-    if (!species || !location) return null
-
-    // Default bloom probability (can be enhanced with real data later)
-    const bloomProbability = 80
-
-    // Review system state
+    // Review system state - moved before any early returns
     const [reviews, setReviews] = useState<UserReview[]>([])
     const [reviewStats, setReviewStats] = useState<ReviewStats>({
         averageRating: 0,
@@ -46,6 +40,8 @@ export default function MarkerDetailPanel({
 
     // Load review data
     useEffect(() => {
+        if (!species || !location) return
+
         const loadReviews = async () => {
             try {
                 setReviewsLoading(true)
@@ -68,10 +64,12 @@ export default function MarkerDetailPanel({
         }
 
         loadReviews()
-    }, [species.speciesId, location.id])
+    }, [species, location])
 
     // Function to refresh reviews after submission
     const refreshReviews = async () => {
+        if (!species || !location) return
+
         const locationId = location.id
 
         const [reviewsData, statsData] = await Promise.all([
@@ -82,6 +80,12 @@ export default function MarkerDetailPanel({
         setReviews(reviewsData)
         setReviewStats(statsData)
     }
+
+    // Early return after all hooks are defined
+    if (!species || !location) return null
+
+    // Default bloom probability (can be enhanced with real data later)
+    const bloomProbability = 80
 
     // Helper function to render star rating
     const renderStars = (rating: number, size = 16) => {

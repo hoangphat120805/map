@@ -7,17 +7,12 @@ import OLMapControls from "@/components/ol-map-controls"
 import SpeciesFilterPanel from "@/components/species-filter-panel"
 
 import BloomCalendar from "@/components/bloom-calendar"
-import Chatbot from "@/components/chatbot"
 import {
     Species,
     Location,
-    SpeciesWithLocations,
     MapOverlay
 } from "@/types/api"
 import {
-    getAllSpecies,
-    getAllLocations,
-    getLocationsBySpecies,
     getAllSpeciesAndLocations,
     getMapOverlays
 } from "@/services/species-api"
@@ -32,7 +27,6 @@ export default function Home() {
 
     // UI state
     const [showCalendar, setShowCalendar] = useState(false)
-    const [showChatbot, setShowChatbot] = useState(false)
 
     // Data state
     const [allSpecies, setAllSpecies] = useState<Species[]>([])
@@ -164,17 +158,13 @@ export default function Home() {
             {showCalendar && (
                 <div className="absolute left-16 bottom-5 z-[900] w-84 overflow-y-auto">
                     <BloomCalendar
-                        allSpecies={allSpecies}
                         filteredLocations={filteredLocations}
-                        selectedSpeciesIds={selectedSpeciesIds}
                         onDateSelect={(dates: Date[]) => {
                             const dateStrings = dates.map(
                                 (d) => d.toISOString().split("T")[0]
                             )
                             handleDateSelect(dateStrings)
                         }}
-                        onSpeciesFilter={handleSpeciesFilter}
-                        onClearFilter={resetFilters}
                         onLocationFilter={(
                             locations: Location[],
                             hasDates: boolean
