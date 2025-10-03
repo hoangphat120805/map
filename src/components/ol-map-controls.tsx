@@ -15,7 +15,6 @@ export default function OLMapControls({
     return (
         <div className={className}>
             <div className="flex flex-col bg-white rounded-lg shadow-lg border border-gray-300 overflow-hidden">
-
                 {/* Calendar Toggle - if callback is provided */}
                 {onCalendarToggle && (
                     <button

@@ -7,11 +7,7 @@ import OLMapControls from "@/components/ol-map-controls"
 import SpeciesFilterPanel from "@/components/species-filter-panel"
 
 import BloomCalendar from "@/components/bloom-calendar"
-import {
-    Species,
-    Location,
-    MapOverlay
-} from "@/types/api"
+import { Species, Location, MapOverlay } from "@/types/api"
 import {
     getAllSpeciesAndLocations,
     getMapOverlays
