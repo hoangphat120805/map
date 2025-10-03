@@ -14,7 +14,8 @@ import {
     LocationsResponse,
     SpeciesDetailResponse,
     SpeciesWithLocations,
-    MapOverlay
+    MapOverlay,
+    LocationCreate
 } from "@/types/api"
 
 // API Configuration
@@ -204,6 +205,50 @@ export async function getAllSpeciesAndLocations(): Promise<{
         return {
             species: [],
             locations: []
+        }
+    }
+}
+
+/**
+ * Tạo location mới
+ */
+export async function createLocation(
+    locationData: LocationCreate
+): Promise<{
+    success: boolean
+    data: Location | null
+    message: string
+}> {
+    try {
+        // For development, using mock implementation
+        return await mockCreateLocation(locationData)
+
+        // Production implementation (uncomment when backend is ready):
+        /*
+        const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.locations}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(locationData)
+        })
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        const result = await response.json()
+        return result
+        */
+    } catch (error) {
+        console.error("Error creating location:", error)
+        return {
+            success: false,
+            data: null,
+            message:
+                error instanceof Error
+                    ? error.message
+                    : "Failed to create location"
         }
     }
 }
@@ -693,6 +738,103 @@ async function mockGetMapOverlays(): Promise<MapOverlay[]> {
             isActive: false // Inactive by default
         }
     ]
+}
+
+async function mockCreateLocation(locationData: Omit<Location, "id">): Promise<{
+    success: boolean
+    data: Location | null
+    message: string
+}> {
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 800))
+
+    try {
+        // Validate required fields
+        if (
+            !locationData.speciesId ||
+            !locationData.locationName ||
+            !locationData.coordinates ||
+            !locationData.bloomingPeriod
+        ) {
+            return {
+                success: false,
+                data: null,
+                message: "Thiếu thông tin bắt buộc"
+            }
+        }
+
+        // Validate coordinates
+        if (
+            !Array.isArray(locationData.coordinates) ||
+            locationData.coordinates.length !== 2
+        ) {
+            return {
+                success: false,
+                data: null,
+                message: "Tọa độ không hợp lệ"
+            }
+        }
+
+        // Validate blooming period
+        const { bloomingPeriod } = locationData
+        if (
+            !bloomingPeriod.start ||
+            !bloomingPeriod.peak ||
+            !bloomingPeriod.end
+        ) {
+            return {
+                success: false,
+                data: null,
+                message: "Thời gian nở hoa không hợp lệ"
+            }
+        }
+
+        // Validate date order
+        const startDate = new Date(bloomingPeriod.start)
+        const peakDate = new Date(bloomingPeriod.peak)
+        const endDate = new Date(bloomingPeriod.end)
+
+        if (peakDate < startDate || endDate < peakDate) {
+            return {
+                success: false,
+                data: null,
+                message: "Thứ tự thời gian nở hoa không hợp lệ"
+            }
+        }
+
+        // Generate new ID (in a real app, this would be handled by the database)
+        const newId = Math.floor(Math.random() * 10000) + 1000
+
+        const newLocation: Location = {
+            id: newId,
+            speciesId: locationData.speciesId,
+            locationName: locationData.locationName.trim(),
+            coordinates: [
+                parseFloat(locationData.coordinates[0].toString()),
+                parseFloat(locationData.coordinates[1].toString())
+            ],
+            bloomingPeriod: {
+                start: bloomingPeriod.start,
+                peak: bloomingPeriod.peak,
+                end: bloomingPeriod.end
+            }
+        }
+
+        // In a real implementation, you would store this in a database
+        // For now, we'll just return the created location
+        return {
+            success: true,
+            data: newLocation,
+            message: "Địa điểm đã được tạo thành công"
+        }
+    } catch (error) {
+        console.error("Mock create location error:", error)
+        return {
+            success: false,
+            data: null,
+            message: "Lỗi khi tạo địa điểm mới"
+        }
+    }
 }
 
 export type { Species, Location, SpeciesWithLocations, MapOverlay }

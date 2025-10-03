@@ -11,8 +11,8 @@ import Feature from "ol/Feature"
 import Point from "ol/geom/Point"
 import { Fill, Stroke, Style, Text } from "ol/style"
 import XYZ from "ol/source/XYZ"
-import { fromLonLat } from "ol/proj"
-import { Layers } from "lucide-react"
+import { fromLonLat, transform } from "ol/proj"
+import { Layers, MapPin } from "lucide-react"
 import { Species, Location, MapOverlay } from "@/types/api"
 import MarkerManager from "@/utils/marker-manager"
 import ViewportManager from "@/utils/viewport-manager"
@@ -29,6 +29,7 @@ interface OLMapProps {
     allSpecies?: Species[]
     selectedLocation?: Location | null
     onLocationClick?: (location: Location) => void
+    onAddLocation?: (coordinates: [number, number]) => void // Handler for adding new location
     className?: string
     style?: React.CSSProperties
     overlays?: MapOverlay[] // Array of map overlays from API
@@ -45,6 +46,7 @@ export default function OLMap({
     allSpecies = [],
     selectedLocation = null,
     onLocationClick,
+    onAddLocation,
     className = "h-full w-full",
     style,
     overlays = [],
@@ -55,6 +57,7 @@ export default function OLMap({
     const [map, setMap] = useState<Map | null>(null)
     const [selectedMarkerLocation, setSelectedMarkerLocation] =
         useState<Location | null>(null)
+    const [currentZoom, setCurrentZoom] = useState<number>(zoom)
 
     const markerManagerRef = useRef<MarkerManager | null>(null)
     const viewportManagerRef = useRef<ViewportManager | null>(null)
@@ -212,6 +215,24 @@ export default function OLMap({
             }
         })
 
+        // Add double-click handler for adding new locations at max zoom
+        olMap.on("dblclick", (event) => {
+            const currentZoom = olMap.getView().getZoom() || 0
+
+            // Only allow adding locations at zoom level 18
+            if (currentZoom >= 18 && onAddLocation) {
+                // Get coordinates from click position
+                const coordinate = olMap.getCoordinateFromPixel(event.pixel)
+                const lonLat = transform(coordinate, "EPSG:3857", "EPSG:4326")
+
+                // Call the handler with longitude and latitude
+                onAddLocation([lonLat[0], lonLat[1]])
+
+                // Prevent map zoom on double-click
+                event.preventDefault()
+            }
+        })
+
         // Add hover handlers for markers
         let hoveredFeature: any = null
 
@@ -261,17 +282,20 @@ export default function OLMap({
         markerManagerRef.current = markerManager
         viewportManagerRef.current = viewportManager
 
-        // Add zoom listener for island labels visibility
+        // Add zoom listener for island labels visibility and zoom state
         const handleZoomChange = () => {
-            const currentZoom = olMap.getView().getZoom() || 0
-            const showIslandLabels = currentZoom >= 5 // Show at lower zoom level
+            const zoomLevel = olMap.getView().getZoom() || 0
+            const showIslandLabels = zoomLevel >= 5 // Show at lower zoom level
 
             console.log(
                 "Current zoom:",
-                currentZoom,
+                zoomLevel,
                 "Show labels:",
                 showIslandLabels
             )
+
+            // Update zoom state
+            setCurrentZoom(zoomLevel)
 
             if (islandLayer) {
                 islandLayer.setVisible(showIslandLabels)
@@ -404,6 +428,25 @@ export default function OLMap({
                 >
                     <Layers size={20} />
                 </button>
+            )}
+
+            {/* Add Location Notification */}
+            {currentZoom >= 18 && onAddLocation && (
+                <div className="absolute top-4 right-4 z-[1100] bg-green-100 border border-green-400 text-green-800 p-3 rounded-lg shadow-lg max-w-xs">
+                    <div className="flex items-start space-x-2">
+                        <MapPin
+                            className="text-green-600 mt-0.5 flex-shrink-0"
+                            size={16}
+                        />
+                        <div className="text-sm">
+                            <p className="font-medium">Thêm địa điểm mới</p>
+                            <p>
+                                Double-click trên bản đồ để thêm địa điểm hoa
+                                mới
+                            </p>
+                        </div>
+                    </div>
+                </div>
             )}
 
             {/* Marker Detail Panel */}

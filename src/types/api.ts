@@ -95,6 +95,23 @@ export interface SpeciesDetailResponse {
     message?: string
 }
 
+export interface LocationCreate {
+    speciesId: number
+    locationName: string
+    coordinates: [number, number]
+    bloomingPeriod: {
+        start: string
+        peak: string
+        end: string
+    }
+}
+
+export interface LocationCreateResponse {
+    success: boolean
+    data: Location | null
+    message: string
+}
+
 // Combined data type for UI components
 export interface SpeciesWithLocations {
     species: Species

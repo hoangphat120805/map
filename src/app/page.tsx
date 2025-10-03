@@ -7,10 +7,12 @@ import OLMapControls from "@/components/ol-map-controls"
 import SpeciesFilterPanel from "@/components/species-filter-panel"
 
 import BloomCalendar from "@/components/bloom-calendar"
-import { Species, Location, MapOverlay } from "@/types/api"
+import AddLocationForm from "@/components/add-location-form"
+import { Species, Location, MapOverlay, LocationCreate } from "@/types/api"
 import {
     getAllSpeciesAndLocations,
-    getMapOverlays
+    getMapOverlays,
+    createLocation
 } from "@/services/species-api"
 
 export default function Home() {
@@ -23,6 +25,10 @@ export default function Home() {
 
     // UI state
     const [showCalendar, setShowCalendar] = useState(false)
+    const [showAddLocationForm, setShowAddLocationForm] = useState(false)
+    const [newLocationCoordinates, setNewLocationCoordinates] = useState<
+        [number, number] | null
+    >(null)
 
     // Data state
     const [allSpecies, setAllSpecies] = useState<Species[]>([])
@@ -104,6 +110,46 @@ export default function Home() {
         setShowCalendar(!showCalendar)
     }
 
+    // Handle adding new location
+    const handleAddLocation = (coordinates: [number, number]) => {
+        setNewLocationCoordinates(coordinates)
+        setShowAddLocationForm(true)
+    }
+
+    const handleSaveNewLocation = async (newLocation: LocationCreate) => {
+        try {
+            // Call the API service to create the location
+            const result = await createLocation(newLocation)
+
+            if (result.success && result.data) {
+                // Add to local state
+                const updatedLocations = [...allLocations, result.data]
+                setAllLocations(updatedLocations)
+                setFilteredLocations(updatedLocations)
+
+                // Close the form
+                setShowAddLocationForm(false)
+                setNewLocationCoordinates(null)
+
+                // Show success message
+                console.log("Location created successfully:", result.message)
+                alert(result.message) // You can replace this with a toast notification
+            } else {
+                // Handle error
+                console.error("Failed to create location:", result.message)
+                alert(`Lỗi: ${result.message}`) // You can replace this with a toast notification
+            }
+        } catch (error) {
+            console.error("Error saving location:", error)
+            alert("Có lỗi xảy ra khi tạo địa điểm mới") // You can replace this with a toast notification
+        }
+    }
+
+    const handleCancelAddLocation = () => {
+        setShowAddLocationForm(false)
+        setNewLocationCoordinates(null)
+    }
+
     if (loading) {
         return (
             <div className="h-screen flex items-center justify-center bg-gray-100">
@@ -126,6 +172,7 @@ export default function Home() {
                 allSpecies={allSpecies}
                 selectedLocation={selectedLocation}
                 onLocationClick={handleLocationClick}
+                onAddLocation={handleAddLocation}
                 overlays={mapOverlays}
                 overlayVisible={overlayVisible}
                 onToggleOverlay={handleToggleOverlay}
@@ -170,6 +217,16 @@ export default function Home() {
                         }}
                     />
                 </div>
+            )}
+
+            {/* Add Location Form */}
+            {showAddLocationForm && newLocationCoordinates && (
+                <AddLocationForm
+                    coordinates={newLocationCoordinates}
+                    allSpecies={allSpecies}
+                    onSave={handleSaveNewLocation}
+                    onCancel={handleCancelAddLocation}
+                />
             )}
         </div>
     )
