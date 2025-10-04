@@ -16,7 +16,7 @@ export default function SpeciesFilterPanel({
     allLocations,
     selectedSpeciesIds,
     onSpeciesFilter,
-    className = "w-full bg-white rounded-lg shadow-lg border border-gray-300"
+    className = "w-full max-w-sm bg-white rounded-lg shadow-lg border border-gray-300"
 }: SpeciesFilterPanelProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const [searchQuery, setSearchQuery] = useState("")

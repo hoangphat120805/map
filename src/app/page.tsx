@@ -73,6 +73,11 @@ export default function Home() {
         loadData()
     }, [])
 
+    // Get current location on component mount
+    useEffect(() => {
+        getCurrentLocation()
+    }, [])
+
     // Filter locations when species selection changes
     useEffect(() => {
         if (selectedSpeciesIds.length === 0) {
@@ -84,6 +89,38 @@ export default function Home() {
             setFilteredLocations(filtered)
         }
     }, [selectedSpeciesIds, allLocations])
+
+    // Get current location using Geolocation API
+    const getCurrentLocation = () => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords
+                setMapCenter([longitude, latitude]) // OpenLayers uses [lon, lat] format
+                setMapZoom(10) // Zoom in to show local area
+                console.log("Current location set:", latitude, longitude)
+            },
+            (error) => {
+                let errorMessage = "Unable to get your location"
+
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = "Location access denied by user"
+                        break
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = "Location information unavailable"
+                        break
+                    case error.TIMEOUT:
+                        errorMessage = "Location request timed out"
+                        break
+                }
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000, // 10 seconds timeout
+                maximumAge: 300000 // 5 minutes cache
+            }
+        )
+    }
 
     // Event handlers
     const handleLocationClick = (location: Location) => {
