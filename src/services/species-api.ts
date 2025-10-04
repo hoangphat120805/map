@@ -62,7 +62,7 @@ export async function getAllSpecies(): Promise<Species[]> {
 export async function getAllLocations(): Promise<Location[]> {
     try {
         // For development, using mock implementation
-        // return await mockGetAllLocations()
+        return await mockGetAllLocations()
 
         // Production implementation (uncomment when backend is ready):
         const response = await fetch(
@@ -734,7 +734,7 @@ async function mockGetMapOverlays(): Promise<MapOverlay[]> {
             id: 2,
             name: "San Francisco Bay Area",
             address: "San Francisco, CA, USA",
-            imageUrl: "/mask.svg",
+            imageUrl: "/mask1.svg",
             startDate: "2025-03-15",
             endDate: "2025-05-15",
             bounds: {
@@ -748,7 +748,7 @@ async function mockGetMapOverlays(): Promise<MapOverlay[]> {
             id: 3,
             name: "Central Vietnam Cherry Blossoms",
             address: "Da Nang - Hue, Vietnam",
-            imageUrl: "/mask.svg",
+            imageUrl: "/mask1.svg",
             startDate: "2025-02-01",
             endDate: "2025-03-31",
             bounds: {
