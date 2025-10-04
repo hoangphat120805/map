@@ -120,8 +120,8 @@ export interface MapOverlay {
     name: string
     address: string
     imageUrl: string
-    startDate: string 
-    endDate: string 
+    startDate: string
+    endDate: string
     bounds: {
         minLon: number
         maxLon: number

@@ -147,7 +147,7 @@ export default function OLMap({
         islandSource.addFeatures([hoangSaLabel, truongSaLabel, bienDongLabel])
 
         // Create overlay layers for selected overlays only
-        const activeOverlays = overlays.filter(overlay => 
+        const activeOverlays = overlays.filter((overlay) =>
             selectedOverlayIds.includes(overlay.id)
         )
 
@@ -357,40 +357,7 @@ export default function OLMap({
     }, [map, zoom])
 
     // Initialize overlay layer when map and overlays are first available
-    useEffect(() => {
-        if (map && overlays.length > 0 && !overlayLayerRef.current) {
-            const activeOverlays = overlays
 
-            if (activeOverlays.length > 0) {
-                const primaryOverlay = activeOverlays[0]
-                overlayLayerRef.current = new ImageLayer({
-                    source: new Static({
-                        url: primaryOverlay.imageUrl,
-                        imageExtent: [
-                            primaryOverlay.bounds.minLon,
-                            primaryOverlay.bounds.minLat,
-                            primaryOverlay.bounds.maxLon,
-                            primaryOverlay.bounds.maxLat
-                        ],
-                        projection: "EPSG:4326"
-                    }),
-                    opacity: 0.7,
-                    zIndex: 500,
-                    properties: {
-                        overlayType: "combined",
-                        overlayCount: activeOverlays.length,
-                        overlayNames: activeOverlays
-                            .map((o) => o.name)
-                            .join(", ")
-                    }
-                })
-
-                // Insert at correct position (after base layers, before island labels)
-                const insertIndex = 2 // After satellite and labels layers
-                map.getLayers().insertAt(insertIndex, overlayLayerRef.current)
-            }
-        }
-    }, [map, overlays]) // Depend on map and overlays
 
     // Control overlay visibility
     useEffect(() => {
@@ -410,7 +377,7 @@ export default function OLMap({
         }
 
         // Create new overlay layer for selected overlays
-        const selectedOverlays = overlays.filter(overlay => 
+        const selectedOverlays = overlays.filter((overlay) =>
             selectedOverlayIds.includes(overlay.id)
         )
 
@@ -443,7 +410,8 @@ export default function OLMap({
             const islandLayerIndex = layers.findIndex(
                 (layer) => layer.get("layerType") === "islandLabels"
             )
-            const insertIndex = islandLayerIndex > -1 ? islandLayerIndex : layers.length - 2
+            const insertIndex =
+                islandLayerIndex > -1 ? islandLayerIndex : layers.length - 2
             map.getLayers().insertAt(insertIndex, overlayLayerRef.current)
         }
     }, [map, selectedOverlayIds, overlays, overlayVisible])

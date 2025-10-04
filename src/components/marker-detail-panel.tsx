@@ -71,20 +71,20 @@ export default function MarkerDetailPanel({
     // Handle ESC key to close video modal
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape' && showVideoModal) {
+            if (event.key === "Escape" && showVideoModal) {
                 setShowVideoModal(false)
             }
         }
 
         if (showVideoModal) {
-            document.addEventListener('keydown', handleKeyDown)
+            document.addEventListener("keydown", handleKeyDown)
             // Prevent body scroll when modal is open
-            document.body.style.overflow = 'hidden'
+            document.body.style.overflow = "hidden"
         }
 
         return () => {
-            document.removeEventListener('keydown', handleKeyDown)
-            document.body.style.overflow = 'unset'
+            document.removeEventListener("keydown", handleKeyDown)
+            document.body.style.overflow = "unset"
         }
     }, [showVideoModal])
 
@@ -466,7 +466,7 @@ export default function MarkerDetailPanel({
                     >
                         <X size={32} />
                     </button>
-                    
+
                     {/* Video Player */}
                     <div className="w-full h-full max-w-6xl max-h-full p-8 flex items-center justify-center">
                         <video
@@ -475,7 +475,7 @@ export default function MarkerDetailPanel({
                             autoPlay
                             className="w-full h-full object-contain"
                             onKeyDown={(e) => {
-                                if (e.key === 'Escape') {
+                                if (e.key === "Escape") {
                                     setShowVideoModal(false)
                                 }
                             }}
