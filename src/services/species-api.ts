@@ -34,7 +34,7 @@ const API_ENDPOINTS = {
 export async function getAllSpecies(): Promise<Species[]> {
     try {
         // For development, using mock implementation
-        // return await mockGetAllSpecies()
+        return await mockGetAllSpecies()
 
         // Production implementation (uncomment when backend is ready):
         const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.species}`)
@@ -274,6 +274,7 @@ async function mockGetAllSpecies(): Promise<Species[]> {
                 "Beautiful pink cherry blossoms that create a stunning canopy during spring.",
             imageUrl:
                 "https://images.unsplash.com/photo-1522383225653-ed111181a951?w=400",
+            videoUrl: "/video.mp4",
             bloomTime: "March - April",
             color: "Pink, White",
             habitat: "Temperate regions, parks, gardens",
@@ -288,6 +289,7 @@ async function mockGetAllSpecies(): Promise<Species[]> {
                 "Large bright yellow flowers that turn to face the sun throughout the day.",
             imageUrl:
                 "https://images.unsplash.com/photo-1522383225653-ed111181a951?w=400",
+            videoUrl: "/video.mp4",
             bloomTime: "June - September",
             color: "Yellow, Golden",
             habitat: "Open fields, gardens, prairies",
@@ -303,6 +305,7 @@ async function mockGetAllSpecies(): Promise<Species[]> {
                 "Sacred lotus flowers blooming on water surfaces with unique water-repelling leaves.",
             imageUrl:
                 "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=400",
+            // videoUrl: undefined, // No video for this species to test conditional rendering
             bloomTime: "May - August",
             color: "Pink, White",
             habitat: "Ponds, lakes, water gardens",
@@ -318,6 +321,7 @@ async function mockGetAllSpecies(): Promise<Species[]> {
                 "Aromatic purple flowers known for their calming fragrance and medicinal properties.",
             imageUrl:
                 "https://images.unsplash.com/photo-1522383225653-ed111181a951?w=400",
+            videoUrl: "/video.mp4",
             bloomTime: "June - August",
             color: "Purple, Violet",
             habitat: "Mediterranean climate, dry soil, hillsides",
@@ -715,30 +719,58 @@ async function mockGetMapOverlays(): Promise<MapOverlay[]> {
         {
             id: 1,
             name: "Los Angeles Bloom Area",
+            address: "Los Angeles, CA, USA",
             imageUrl: "/mask.svg",
+            startDate: "2025-03-01",
+            endDate: "2025-04-30",
             bounds: {
                 minLon: -118.46,
                 maxLon: -118.26,
                 minLat: 34.66,
                 maxLat: 34.8
-            },
-            opacity: 0.7,
-            zIndex: 500,
-            isActive: true
+            }
         },
         {
             id: 2,
             name: "San Francisco Bay Area",
-            imageUrl: "/sf-mask.svg", // Example future overlay
+            address: "San Francisco, CA, USA",
+            imageUrl: "/mask.svg",
+            startDate: "2025-03-15",
+            endDate: "2025-05-15",
             bounds: {
                 minLon: -122.5,
                 maxLon: -122.3,
                 minLat: 37.7,
                 maxLat: 37.9
-            },
-            opacity: 0.6,
-            zIndex: 500,
-            isActive: false // Inactive by default
+            }
+        },
+        {
+            id: 3,
+            name: "Central Vietnam Cherry Blossoms",
+            address: "Da Nang - Hue, Vietnam",
+            imageUrl: "/mask.svg",
+            startDate: "2025-02-01",
+            endDate: "2025-03-31",
+            bounds: {
+                minLon: 107.5,
+                maxLon: 108.5,
+                minLat: 15.5,
+                maxLat: 16.5
+            }
+        },
+        {
+            id: 4,
+            name: "Northern Vietnam Spring Flowers",
+            address: "Hanoi - Ha Long Bay, Vietnam",
+            imageUrl: "/mask.svg",
+            startDate: "2025-01-15",
+            endDate: "2025-04-15",
+            bounds: {
+                minLon: 105.5,
+                maxLon: 107.0,
+                minLat: 20.5,
+                maxLat: 21.5
+            }
         }
     ]
 }

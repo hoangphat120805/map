@@ -7,7 +7,8 @@ import {
     MessageCircle,
     Camera,
     ChevronDown,
-    ChevronUp
+    ChevronUp,
+    Play
 } from "lucide-react"
 import { UserReview, ReviewStats, Species, Location } from "@/types/api"
 import { getReviews, getReviewStats } from "@/services/review-api"
@@ -37,6 +38,7 @@ export default function MarkerDetailPanel({
     const [reviewsLoading, setReviewsLoading] = useState(true)
     const [showAllReviews, setShowAllReviews] = useState(false)
     const [showReviewForm, setShowReviewForm] = useState(false)
+    const [showVideoModal, setShowVideoModal] = useState(false)
 
     // Load review data
     useEffect(() => {
@@ -65,6 +67,26 @@ export default function MarkerDetailPanel({
 
         loadReviews()
     }, [species, location])
+
+    // Handle ESC key to close video modal
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape' && showVideoModal) {
+                setShowVideoModal(false)
+            }
+        }
+
+        if (showVideoModal) {
+            document.addEventListener('keydown', handleKeyDown)
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden'
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown)
+            document.body.style.overflow = 'unset'
+        }
+    }, [showVideoModal])
 
     // Function to refresh reviews after submission
     const refreshReviews = async () => {
@@ -148,6 +170,19 @@ export default function MarkerDetailPanel({
                         alt={species.name}
                         className="w-full h-48 object-cover rounded-lg"
                     />
+                </div>
+            )}
+
+            {/* Video Section */}
+            {species.videoUrl && (
+                <div className="p-4 border-b border-gray-200">
+                    <button
+                        onClick={() => setShowVideoModal(true)}
+                        className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        <Play size={20} />
+                        <span className="font-medium">Watch Species Video</span>
+                    </button>
                 </div>
             )}
 
@@ -420,6 +455,42 @@ export default function MarkerDetailPanel({
                     </>
                 )}
             </div>
+
+            {/* Fullscreen Video Modal */}
+            {showVideoModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-90 z-[2000] flex items-center justify-center">
+                    {/* Close Button */}
+                    <button
+                        onClick={() => setShowVideoModal(false)}
+                        className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-[2001]"
+                    >
+                        <X size={32} />
+                    </button>
+                    
+                    {/* Video Player */}
+                    <div className="w-full h-full max-w-6xl max-h-full p-8 flex items-center justify-center">
+                        <video
+                            src={species?.videoUrl || "/video.mp4"}
+                            controls
+                            autoPlay
+                            className="w-full h-full object-contain"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Escape') {
+                                    setShowVideoModal(false)
+                                }
+                            }}
+                        >
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+
+                    {/* Click outside to close */}
+                    <div
+                        className="absolute inset-0 -z-10"
+                        onClick={() => setShowVideoModal(false)}
+                    />
+                </div>
+            )}
         </div>
     )
 }

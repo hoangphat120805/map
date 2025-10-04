@@ -39,6 +39,7 @@ interface OLMapProps {
     overlays?: MapOverlay[] // Array of map overlays from API
     overlayVisible?: boolean // Control overlay visibility
     onToggleOverlay?: () => void // Toggle overlay callback
+    selectedOverlayIds?: number[] // IDs of selected overlays to show
 }
 
 export default function OLMap({
@@ -56,7 +57,8 @@ export default function OLMap({
     style,
     overlays = [],
     overlayVisible = true,
-    onToggleOverlay
+    onToggleOverlay,
+    selectedOverlayIds = []
 }: OLMapProps) {
     const mapRef = useRef<HTMLDivElement>(null)
     const [map, setMap] = useState<Map | null>(null)
@@ -144,11 +146,13 @@ export default function OLMap({
 
         islandSource.addFeatures([hoangSaLabel, truongSaLabel, bienDongLabel])
 
-        // Create combined overlay layer from API data (only once)
-        const activeOverlays = overlays.filter((overlay) => overlay.isActive)
+        // Create overlay layers for selected overlays only
+        const activeOverlays = overlays.filter(overlay => 
+            selectedOverlayIds.includes(overlay.id)
+        )
 
         if (activeOverlays.length > 0 && !overlayLayerRef.current) {
-            // For simplicity, use the first active overlay as the combined layer
+            // For simplicity, use the first selected overlay as the combined layer
             // In production, you might want to merge images server-side or use a different approach
             const primaryOverlay = activeOverlays[0]
             overlayLayerRef.current = new ImageLayer({
@@ -162,10 +166,10 @@ export default function OLMap({
                     ],
                     projection: "EPSG:4326"
                 }),
-                opacity: primaryOverlay.opacity || 0.7,
+                opacity: 0.7,
                 zIndex: 500,
                 properties: {
-                    overlayType: "combined",
+                    overlayType: "selected",
                     overlayCount: activeOverlays.length,
                     overlayNames: activeOverlays.map((o) => o.name).join(", ")
                 }
@@ -355,9 +359,7 @@ export default function OLMap({
     // Initialize overlay layer when map and overlays are first available
     useEffect(() => {
         if (map && overlays.length > 0 && !overlayLayerRef.current) {
-            const activeOverlays = overlays.filter(
-                (overlay) => overlay.isActive
-            )
+            const activeOverlays = overlays
 
             if (activeOverlays.length > 0) {
                 const primaryOverlay = activeOverlays[0]
@@ -372,7 +374,7 @@ export default function OLMap({
                         ],
                         projection: "EPSG:4326"
                     }),
-                    opacity: primaryOverlay.opacity || 0.7,
+                    opacity: 0.7,
                     zIndex: 500,
                     properties: {
                         overlayType: "combined",
@@ -396,6 +398,55 @@ export default function OLMap({
             overlayLayerRef.current.setVisible(overlayVisible)
         }
     }, [overlayVisible])
+
+    // Update overlay layers when selected overlays change
+    useEffect(() => {
+        if (!map) return
+
+        // Remove existing overlay layer
+        if (overlayLayerRef.current) {
+            map.removeLayer(overlayLayerRef.current)
+            overlayLayerRef.current = null
+        }
+
+        // Create new overlay layer for selected overlays
+        const selectedOverlays = overlays.filter(overlay => 
+            selectedOverlayIds.includes(overlay.id)
+        )
+
+        if (selectedOverlays.length > 0) {
+            // Use the first selected overlay as the primary overlay
+            const primaryOverlay = selectedOverlays[0]
+            overlayLayerRef.current = new ImageLayer({
+                source: new Static({
+                    url: primaryOverlay.imageUrl,
+                    imageExtent: [
+                        primaryOverlay.bounds.minLon,
+                        primaryOverlay.bounds.minLat,
+                        primaryOverlay.bounds.maxLon,
+                        primaryOverlay.bounds.maxLat
+                    ],
+                    projection: "EPSG:4326"
+                }),
+                opacity: 0.7,
+                zIndex: 500,
+                visible: overlayVisible,
+                properties: {
+                    overlayType: "selected",
+                    overlayCount: selectedOverlays.length,
+                    overlayNames: selectedOverlays.map((o) => o.name).join(", ")
+                }
+            })
+
+            // Insert overlay layer before island labels
+            const layers = map.getLayers().getArray()
+            const islandLayerIndex = layers.findIndex(
+                (layer) => layer.get("layerType") === "islandLabels"
+            )
+            const insertIndex = islandLayerIndex > -1 ? islandLayerIndex : layers.length - 2
+            map.getLayers().insertAt(insertIndex, overlayLayerRef.current)
+        }
+    }, [map, selectedOverlayIds, overlays, overlayVisible])
 
     // Optimized marker updates with debouncing and caching
     useEffect(() => {

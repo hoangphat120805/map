@@ -53,6 +53,7 @@ export interface Species {
     scientificName: string
     description: string
     imageUrl: string
+    videoUrl?: string
     bloomTime?: string
     color?: string
     habitat?: string
@@ -117,14 +118,14 @@ export interface SpeciesWithLocations {
 export interface MapOverlay {
     id: number
     name: string
+    address: string
     imageUrl: string
+    startDate: string 
+    endDate: string 
     bounds: {
         minLon: number
         maxLon: number
         minLat: number
         maxLat: number
     }
-    opacity?: number
-    zIndex?: number
-    isActive?: boolean
 }

@@ -4,7 +4,7 @@ import "ol/ol.css"
 import "@/styles/ol-custom.css"
 import OLMap from "@/components/ol-map"
 import OLMapControls from "@/components/ol-map-controls"
-import SpeciesFilterPanel from "@/components/species-filter-panel"
+import OverlayFilterPanel from "@/components/overlay-filter-panel"
 import MapSearch from "@/components/map-search"
 
 import BloomCalendar from "@/components/bloom-calendar"
@@ -34,11 +34,11 @@ export default function Home() {
     // Data state
     const [allSpecies, setAllSpecies] = useState<Species[]>([])
     const [allLocations, setAllLocations] = useState<Location[]>([])
-    const [filteredLocations, setFilteredLocations] = useState<Location[]>([]) // Filtered by species
+    const [filteredLocations, setFilteredLocations] = useState<Location[]>([]) // Filtered by overlays
     const [calendarFilteredLocations, setCalendarFilteredLocations] = useState<
         Location[]
     >([]) // Further filtered by calendar dates
-    const [selectedSpeciesIds, setSelectedSpeciesIds] = useState<number[]>([])
+    const [selectedOverlayIds, setSelectedOverlayIds] = useState<number[]>([])
     const [hasDateFilter, setHasDateFilter] = useState(false) // Track if calendar has active date filter
     const [mapOverlays, setMapOverlays] = useState<MapOverlay[]>([]) // Map overlays from API
     const [overlayVisible, setOverlayVisible] = useState(true) // Control overlay visibility
@@ -62,7 +62,7 @@ export default function Home() {
                 setAllSpecies(speciesData.species)
                 setAllLocations(speciesData.locations)
                 setMapOverlays(overlaysData)
-                setFilteredLocations([]) // Initially show no locations until user selects species
+                setFilteredLocations([]) // Initially show no locations until user selects overlays
             } catch (error) {
                 console.error("Error loading data:", error)
             } finally {
@@ -78,17 +78,30 @@ export default function Home() {
         getCurrentLocation()
     }, [])
 
-    // Filter locations when species selection changes
+    // Filter locations when overlay selection changes
     useEffect(() => {
-        if (selectedSpeciesIds.length === 0) {
-            setFilteredLocations([]) // Không hiển thị marker nào khi chưa chọn species
+        if (selectedOverlayIds.length === 0) {
+            setFilteredLocations([]) // Không hiển thị marker nào khi chưa chọn overlay
         } else {
-            const filtered = allLocations.filter((location) =>
-                selectedSpeciesIds.includes(location.speciesId)
-            )
+            const filtered = allLocations.filter((location) => {
+                return selectedOverlayIds.some((overlayId) => {
+                    const overlay = mapOverlays.find((o) => o.id === overlayId)
+                    if (!overlay) return false
+
+                    // Check if location is within overlay bounds
+                    const [lon, lat] = location.coordinates
+                    const { bounds } = overlay
+                    return (
+                        lon >= bounds.minLon &&
+                        lon <= bounds.maxLon &&
+                        lat >= bounds.minLat &&
+                        lat <= bounds.maxLat
+                    )
+                })
+            })
             setFilteredLocations(filtered)
         }
-    }, [selectedSpeciesIds, allLocations])
+    }, [selectedOverlayIds, allLocations, mapOverlays])
 
     // Get current location using Geolocation API
     const getCurrentLocation = () => {
@@ -130,8 +143,8 @@ export default function Home() {
         setMapZoom(12)
     }
 
-    const handleSpeciesFilter = (speciesIds: number[]) => {
-        setSelectedSpeciesIds(speciesIds)
+    const handleOverlayFilter = (overlayIds: number[]) => {
+        setSelectedOverlayIds(overlayIds)
     }
 
     const handleToggleOverlay = () => {
@@ -144,8 +157,8 @@ export default function Home() {
     }
 
     const resetFilters = () => {
-        setSelectedSpeciesIds([])
-        setFilteredLocations(allLocations)
+        setSelectedOverlayIds([])
+        setFilteredLocations([])
     }
 
     const toggleCalendar = () => {
@@ -246,6 +259,7 @@ export default function Home() {
                 overlays={mapOverlays}
                 overlayVisible={overlayVisible}
                 onToggleOverlay={handleToggleOverlay}
+                selectedOverlayIds={selectedOverlayIds}
                 className="h-full w-full"
             />
 
@@ -257,13 +271,13 @@ export default function Home() {
                 />
             </div>
 
-            {/* Species Filter Panel - Top Left */}
+            {/* Overlay Filter Panel - Top Left */}
             <div className="absolute top-4 left-4 z-[1000]">
-                <SpeciesFilterPanel
-                    allSpecies={allSpecies}
+                <OverlayFilterPanel
+                    allOverlays={mapOverlays}
                     allLocations={allLocations}
-                    selectedSpeciesIds={selectedSpeciesIds}
-                    onSpeciesFilter={handleSpeciesFilter}
+                    selectedOverlayIds={selectedOverlayIds}
+                    onOverlayFilter={handleOverlayFilter}
                 />
             </div>
 
