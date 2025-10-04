@@ -358,7 +358,6 @@ export default function OLMap({
 
     // Initialize overlay layer when map and overlays are first available
 
-
     // Control overlay visibility
     useEffect(() => {
         if (overlayLayerRef.current) {
