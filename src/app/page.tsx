@@ -5,6 +5,7 @@ import "@/styles/ol-custom.css"
 import OLMap from "@/components/ol-map"
 import OLMapControls from "@/components/ol-map-controls"
 import SpeciesFilterPanel from "@/components/species-filter-panel"
+import MapSearch from "@/components/map-search"
 
 import BloomCalendar from "@/components/bloom-calendar"
 import AddLocationForm from "@/components/add-location-form"
@@ -41,6 +42,10 @@ export default function Home() {
     const [hasDateFilter, setHasDateFilter] = useState(false) // Track if calendar has active date filter
     const [mapOverlays, setMapOverlays] = useState<MapOverlay[]>([]) // Map overlays from API
     const [overlayVisible, setOverlayVisible] = useState(true) // Control overlay visibility
+    const [searchLocation, setSearchLocation] = useState<{
+        coordinates: [number, number]
+        displayName: string
+    } | null>(null) // Search result location with marker
 
     const [loading, setLoading] = useState(true)
 
@@ -150,6 +155,34 @@ export default function Home() {
         setNewLocationCoordinates(null)
     }
 
+    // Handle search location selection
+    const handleSearchLocationSelect = (
+        coordinates: [number, number],
+        displayName: string
+    ) => {
+        // MapSearch returns [lat, lon] but we need [lon, lat] for the map
+        const mapCoordinates: [number, number] = [
+            coordinates[1],
+            coordinates[0]
+        ]
+        setMapCenter(mapCoordinates)
+        setMapZoom(12)
+
+        // Save search location for marker display
+        setSearchLocation({
+            coordinates: mapCoordinates,
+            displayName: displayName
+        })
+
+        console.log("Search location selected:", displayName, coordinates)
+    }
+
+    // Clear search location when clicking on regular locations
+    const handleLocationClickWithClearSearch = (location: Location) => {
+        setSearchLocation(null) // Clear search marker
+        handleLocationClick(location)
+    }
+
     if (loading) {
         return (
             <div className="h-screen flex items-center justify-center bg-gray-100">
@@ -171,17 +204,25 @@ export default function Home() {
                 }
                 allSpecies={allSpecies}
                 selectedLocation={selectedLocation}
-                onLocationClick={handleLocationClick}
+                onLocationClick={handleLocationClickWithClearSearch}
                 onAddLocation={handleAddLocation}
+                searchLocation={searchLocation}
                 overlays={mapOverlays}
                 overlayVisible={overlayVisible}
                 onToggleOverlay={handleToggleOverlay}
                 className="h-full w-full"
             />
 
-            {/* Top Bar - Left Side */}
-            <div className="absolute top-4 left-4 z-[1000] flex flex-col gap-3 max-w-sm max-h-[60vh] overflow-y-auto">
-                {/* Species Filter Panel */}
+            {/* Map Search - Centered at Top */}
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000]">
+                <MapSearch
+                    onLocationSelect={handleSearchLocationSelect}
+                    className="w-96"
+                />
+            </div>
+
+            {/* Species Filter Panel - Top Left */}
+            <div className="absolute top-4 left-4 z-[1000]">
                 <SpeciesFilterPanel
                     allSpecies={allSpecies}
                     allLocations={allLocations}

@@ -36,7 +36,7 @@ export async function submitReview(
         formData.append('locationId', review.locationId.toString())
         formData.append('rating', review.rating.toString())
         formData.append('comment', review.comment)
-        formData.append('visitDate', review.visitDate)
+        // visitDate will be automatically set by server to current datetime
         
         review.images.forEach((image, index) => {
             formData.append(`images`, image)
@@ -180,6 +180,9 @@ async function mockSubmitReview(
     // Upload images first
     const uploadedImages = await mockUploadImages(review.images)
 
+    // Server automatically sets visitDate to current datetime
+    const currentDateTime = new Date().toISOString()
+
     const newReview: UserReview = {
         id: `review_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         speciesId: review.speciesId,
@@ -190,10 +193,10 @@ async function mockSubmitReview(
         rating: review.rating,
         comment: review.comment,
         images: uploadedImages,
-        timestamp: new Date().toISOString(),
+        timestamp: currentDateTime,
         isVerified: false,
         helpfulCount: 0,
-        visitDate: review.visitDate
+        visitDate: currentDateTime // Server sets this to current datetime
     }
 
     // Store in localStorage for persistence during development

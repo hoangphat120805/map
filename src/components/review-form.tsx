@@ -22,7 +22,6 @@ export default function ReviewForm({
     const [rating, setRating] = useState(0)
     const [hoveredRating, setHoveredRating] = useState(0)
     const [comment, setComment] = useState("")
-    const [visitDate, setVisitDate] = useState("")
     const [selectedFiles, setSelectedFiles] = useState<File[]>([])
     const [previews, setPreviews] = useState<string[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -117,11 +116,6 @@ export default function ReviewForm({
             return
         }
 
-        if (!visitDate) {
-            alert("Please select your visit date")
-            return
-        }
-
         setIsSubmitting(true)
 
         try {
@@ -130,8 +124,7 @@ export default function ReviewForm({
                 locationId,
                 rating,
                 comment: comment.trim(),
-                images: selectedFiles,
-                visitDate
+                images: selectedFiles
             }
 
             const result = await submitReview(reviewData)
@@ -223,21 +216,6 @@ export default function ReviewForm({
                             {rating === 5 && "Excellent"}
                         </p>
                     )}
-                </div>
-
-                {/* Visit Date */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Visit Date *
-                    </label>
-                    <input
-                        type="date"
-                        value={visitDate}
-                        onChange={(e) => setVisitDate(e.target.value)}
-                        max={new Date().toISOString().split("T")[0]}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                    />
                 </div>
 
                 {/* Comment */}
@@ -335,10 +313,7 @@ export default function ReviewForm({
                     <button
                         type="submit"
                         disabled={
-                            isSubmitting ||
-                            rating === 0 ||
-                            !comment.trim() ||
-                            !visitDate
+                            isSubmitting || rating === 0 || !comment.trim()
                         }
                         className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                     >

@@ -42,7 +42,6 @@ export interface ReviewSubmission {
     rating: number
     comment: string
     images: File[]
-    visitDate: string
 }
 
 export interface ReviewResponse {

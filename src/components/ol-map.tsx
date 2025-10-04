@@ -9,7 +9,7 @@ import VectorSource from "ol/source/Vector"
 import Static from "ol/source/ImageStatic"
 import Feature from "ol/Feature"
 import Point from "ol/geom/Point"
-import { Fill, Stroke, Style, Text } from "ol/style"
+import { Fill, Stroke, Style, Text, Icon } from "ol/style"
 import XYZ from "ol/source/XYZ"
 import { fromLonLat, transform } from "ol/proj"
 import { Layers, MapPin } from "lucide-react"
@@ -30,6 +30,10 @@ interface OLMapProps {
     selectedLocation?: Location | null
     onLocationClick?: (location: Location) => void
     onAddLocation?: (coordinates: [number, number]) => void // Handler for adding new location
+    searchLocation?: {
+        coordinates: [number, number]
+        displayName: string
+    } | null // Search result location with marker
     className?: string
     style?: React.CSSProperties
     overlays?: MapOverlay[] // Array of map overlays from API
@@ -47,6 +51,7 @@ export default function OLMap({
     selectedLocation = null,
     onLocationClick,
     onAddLocation,
+    searchLocation = null,
     className = "h-full w-full",
     style,
     overlays = [],
@@ -63,6 +68,7 @@ export default function OLMap({
     const viewportManagerRef = useRef<ViewportManager | null>(null)
     const updateTimerRef = useRef<NodeJS.Timeout | null>(null)
     const overlayLayerRef = useRef<ImageLayer<Static> | null>(null) // Keep reference to overlay layer
+    const searchVectorSourceRef = useRef<VectorSource | null>(null) // Search marker layer
 
     // Initialize map
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,6 +80,14 @@ export default function OLMap({
         const vectorLayer = new VectorLayer({
             source: vectorSource,
             zIndex: 1000
+        })
+
+        // Create search marker layer
+        const searchVectorSource = new VectorSource()
+        searchVectorSourceRef.current = searchVectorSource
+        const searchLayer = new VectorLayer({
+            source: searchVectorSource,
+            zIndex: 1200 // Higher than normal markers
         })
 
         // Create island labels layer
@@ -181,7 +195,9 @@ export default function OLMap({
                 // Island labels layer
                 islandLayer,
                 // Marker layer
-                vectorLayer
+                vectorLayer,
+                // Search marker layer
+                searchLayer
             ],
             view: new View({
                 center: fromLonLat(center),
@@ -410,6 +426,37 @@ export default function OLMap({
             }
         }
     }, [locations, allSpecies, selectedLocation])
+
+    // Handle search marker
+    useEffect(() => {
+        if (!searchVectorSourceRef.current) return
+
+        // Clear existing search markers
+        searchVectorSourceRef.current.clear()
+
+        if (searchLocation) {
+            // Create search marker feature
+            const searchMarker = new Feature({
+                geometry: new Point(fromLonLat(searchLocation.coordinates)),
+                name: searchLocation.displayName,
+                type: "search"
+            })
+
+            // Style for search marker (different from regular markers)
+            const searchStyle = new Style({
+                image: new Icon({
+                    src: "/marker-icon.png",
+                    scale: 1.2, // Slightly larger than regular markers
+                    anchor: [0.5, 1],
+                    anchorXUnits: "fraction",
+                    anchorYUnits: "fraction"
+                })
+            })
+
+            searchMarker.setStyle(searchStyle)
+            searchVectorSourceRef.current.addFeature(searchMarker)
+        }
+    }, [searchLocation])
 
     return (
         <div className={className} style={style}>
