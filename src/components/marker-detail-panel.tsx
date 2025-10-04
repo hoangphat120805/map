@@ -304,21 +304,14 @@ export default function MarkerDetailPanel({
                                     >
                                         <div className="flex items-start justify-between mb-2">
                                             <div className="flex items-center gap-2">
-                                                {review.userAvatar && (
-                                                    <img
-                                                        src={review.userAvatar}
-                                                        alt={review.userName}
-                                                        className="w-6 h-6 rounded-full"
-                                                    />
-                                                )}
+                                                <img
+                                                    src="https://i.pinimg.com/736x/bc/43/98/bc439871417621836a0eeea768d60944.jpg"
+                                                    alt={review.userName}
+                                                    className="w-6 h-6 rounded-full"
+                                                />
                                                 <span className="font-medium text-sm text-gray-900">
                                                     {review.userName}
                                                 </span>
-                                                {review.isVerified && (
-                                                    <span className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">
-                                                        Verified
-                                                    </span>
-                                                )}
                                             </div>
                                             <div className="flex items-center gap-1">
                                                 {renderStars(review.rating, 12)}
@@ -330,7 +323,7 @@ export default function MarkerDetailPanel({
                                         </p>
 
                                         {/* Review Images */}
-                                        {review.images.length > 0 && (
+                                        {/* {review.images.length > 0 && (
                                             <div className="flex gap-2 mb-2">
                                                 {review.images
                                                     .slice(0, 3)
@@ -358,13 +351,10 @@ export default function MarkerDetailPanel({
                                                     </div>
                                                 )}
                                             </div>
-                                        )}
+                                        )} */}
 
                                         <div className="flex items-center justify-between text-xs text-gray-500">
-                                            <span>
-                                                Visited:{" "}
-                                                {formatDate(review.visitDate)}
-                                            </span>
+                                            {/* 2025-10-04 07:51:39.35331 */}
                                             <span>
                                                 {formatDate(review.timestamp)}
                                             </span>

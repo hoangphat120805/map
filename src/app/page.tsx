@@ -125,7 +125,6 @@ export default function Home() {
         try {
             // Call the API service to create the location
             const result = await createLocation(newLocation)
-
             if (result.success && result.data) {
                 // Add to local state
                 const updatedLocations = [...allLocations, result.data]
@@ -137,8 +136,8 @@ export default function Home() {
                 setNewLocationCoordinates(null)
 
                 // Show success message
-                console.log("Location created successfully:", result.message)
-                alert(result.message) // You can replace this with a toast notification
+                // console.log("Location created successfully:", result.message)
+                // alert(result.message) // You can replace this with a toast notification
             } else {
                 // Handle error
                 console.error("Failed to create location:", result.message)

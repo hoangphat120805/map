@@ -12,11 +12,12 @@ import {
 } from "@/types/api"
 
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 const API_ENDPOINTS = {
-    reviews: "/api/reviews",
-    uploadImage: "/api/reviews/upload",
-    reviewStats: "/api/reviews/stats"
+    reviews: "/api/v1/reviews/all",
+    reviews_post: "/api/v1/reviews/submit",
+    uploadImage: "/api/v1/reviews/upload",
+    reviewStats: "/api/v1/reviews/stats"
 }
 
 /**
@@ -27,35 +28,35 @@ export async function submitReview(
 ): Promise<ReviewResponse> {
     try {
         // For development, using mock implementation
-        return await mockSubmitReview(review)
+        // return await mockSubmitReview(review)
 
         // Production implementation (uncomment when backend is ready):
-        /*
         const formData = new FormData()
-        formData.append('speciesId', review.speciesId.toString())
-        formData.append('locationId', review.locationId.toString())
-        formData.append('rating', review.rating.toString())
-        formData.append('comment', review.comment)
-        // visitDate will be automatically set by server to current datetime
-        
+        formData.append("speciesId", review.speciesId.toString())
+        formData.append("locationId", review.locationId.toString())
+        formData.append("rating", review.rating.toString())
+        formData.append("comment", review.comment)
+        formData.append("userName", review.userName)
         review.images.forEach((image, index) => {
             formData.append(`images`, image)
         })
 
-        const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.reviews}`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Authorization': `Bearer ${getAuthToken()}`
+        const response = await fetch(
+            `${API_BASE_URL}${API_ENDPOINTS.reviews_post}`,
+            {
+                method: "POST",
+                body: formData,
+                headers: {
+                    Authorization: `Bearer ${getAuthToken()}`
+                }
             }
-        })
+        )
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
         }
 
         return await response.json()
-        */
     } catch (error) {
         console.error("Error submitting review:", error)
         return {
@@ -78,12 +79,14 @@ export async function getReviews(
 ): Promise<UserReview[]> {
     try {
         // For development, using mock implementation
-        return await mockGetReviews(speciesId, locationId)
+        // return await mockGetReviews(speciesId, locationId)
 
         // Production implementation (uncomment when backend is ready):
-        /*
         const response = await fetch(
-            `${API_BASE_URL}${API_ENDPOINTS.reviews}?speciesId=${speciesId}&locationId=${locationId}`
+            `${API_BASE_URL}${API_ENDPOINTS.reviews}?speciesId=${speciesId}&locationId=${locationId}`,
+            {
+                method: "GET"
+            }
         )
 
         if (!response.ok) {
@@ -91,8 +94,8 @@ export async function getReviews(
         }
 
         const data = await response.json()
-        return data.reviews || []
-        */
+        console.log("Fetch response:", data)
+        return data || []
     } catch (error) {
         console.error("Error fetching reviews:", error)
         return []
@@ -108,10 +111,9 @@ export async function getReviewStats(
 ): Promise<ReviewStats> {
     try {
         // For development, using mock implementation
-        return await mockGetReviewStats(speciesId, locationId)
+        // return await mockGetReviewStats(speciesId, locationId)
 
         // Production implementation (uncomment when backend is ready):
-        /*
         const response = await fetch(
             `${API_BASE_URL}${API_ENDPOINTS.reviewStats}?speciesId=${speciesId}&locationId=${locationId}`
         )
@@ -120,8 +122,9 @@ export async function getReviewStats(
             throw new Error(`HTTP error! status: ${response.status}`)
         }
 
-        return await response.json()
-        */
+        const data = await response.json()
+        console.log("Fetch review stats response:", data)
+        return data
     } catch (error) {
         console.error("Error fetching review stats:", error)
         return {
@@ -140,22 +143,24 @@ export async function uploadReviewImages(
 ): Promise<ReviewImage[]> {
     try {
         // For development, using mock implementation
-        return await mockUploadImages(files)
+        // return await mockUploadImages(files)
 
         // Production implementation (uncomment when backend is ready):
-        /*
         const formData = new FormData()
-        files.forEach(file => {
-            formData.append('images', file)
+        files.forEach((file) => {
+            formData.append("images", file)
         })
 
-        const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.uploadImage}`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Authorization': `Bearer ${getAuthToken()}`
+        const response = await fetch(
+            `${API_BASE_URL}${API_ENDPOINTS.uploadImage}`,
+            {
+                method: "POST",
+                body: formData,
+                headers: {
+                    Authorization: `Bearer ${getAuthToken()}`
+                }
             }
-        })
+        )
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
@@ -163,7 +168,6 @@ export async function uploadReviewImages(
 
         const data = await response.json()
         return data.images || []
-        */
     } catch (error) {
         console.error("Error uploading images:", error)
         return []
@@ -187,16 +191,11 @@ async function mockSubmitReview(
         id: `review_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         speciesId: review.speciesId,
         locationId: review.locationId,
-        userId: "user_123", // Mock user ID
-        userName: "Flower Enthusiast",
-        userAvatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${Math.random()}`,
+        userName: review.userName,
         rating: review.rating,
         comment: review.comment,
         images: uploadedImages,
-        timestamp: currentDateTime,
-        isVerified: false,
-        helpfulCount: 0,
-        visitDate: currentDateTime // Server sets this to current datetime
+        timestamp: currentDateTime
     }
 
     // Store in localStorage for persistence during development
@@ -323,16 +322,11 @@ function generateMockReviews(
             id: `mock_review_${speciesId}_${locationId}_${i}`,
             speciesId,
             locationId,
-            userId: `user_${i}`,
             userName: mockUserNames[i % mockUserNames.length],
-            userAvatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`,
             rating: Math.floor(Math.random() * 2) + 4, // Mostly 4-5 stars
             comment: mockComments[i % mockComments.length],
             images: [], // No images for initial mock reviews
-            timestamp: visitDate.toISOString(),
-            isVerified: Math.random() > 0.7, // 30% chance of being verified
-            helpfulCount: Math.floor(Math.random() * 10),
-            visitDate: visitDate.toISOString()
+            timestamp: visitDate.toISOString()
         })
     }
 

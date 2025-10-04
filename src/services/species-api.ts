@@ -19,12 +19,13 @@ import {
 } from "@/types/api"
 
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 const API_ENDPOINTS = {
-    species: "/api/species",
-    locations: "/api/locations",
-    speciesDetail: "/api/species",
-    speciesLocations: "/api/species"
+    species: "/api/v1/species/all",
+    locations_all: "/api/v1/locations/all",
+    locations: "/api/v1/locations",
+    speciesDetail: "/api/v1/species",
+    speciesLocations: "/api/v1/locations"
 }
 
 /**
@@ -33,24 +34,22 @@ const API_ENDPOINTS = {
 export async function getAllSpecies(): Promise<Species[]> {
     try {
         // For development, using mock implementation
-        return await mockGetAllSpecies()
+        // return await mockGetAllSpecies()
 
         // Production implementation (uncomment when backend is ready):
-        /*
         const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.species}`)
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
         }
-        
+
         const data: SpeciesListResponse = await response.json()
-        
+        console.log("Fetched species data:", data)
+
         if (!data.success) {
-            throw new Error(data.message || 'Failed to fetch species')
+            throw new Error(data.message || "Failed to fetch species")
         }
-        
         return data.data
-        */
     } catch (error) {
         console.error("Error fetching all species:", error)
         return []
@@ -63,24 +62,25 @@ export async function getAllSpecies(): Promise<Species[]> {
 export async function getAllLocations(): Promise<Location[]> {
     try {
         // For development, using mock implementation
-        return await mockGetAllLocations()
+        // return await mockGetAllLocations()
 
         // Production implementation (uncomment when backend is ready):
-        /*
-        const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.locations}`)
-        
+        const response = await fetch(
+            `${API_BASE_URL}${API_ENDPOINTS.locations_all}`
+        )
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
         }
-        
+
         const data: LocationsResponse = await response.json()
-        
+        console.log("Fetched locations data:", data)
+
         if (!data.success) {
-            throw new Error(data.message || 'Failed to fetch locations')
+            throw new Error(data.message || "Failed to fetch locations")
         }
-        
+
         return data.data
-        */
     } catch (error) {
         console.error("Error fetching all locations:", error)
         return []
@@ -95,24 +95,24 @@ export async function getLocationsBySpecies(
 ): Promise<Location[]> {
     try {
         // For development, using mock implementation
-        return await mockGetLocationsBySpecies(speciesId)
+        // return await mockGetLocationsBySpecies(speciesId)
 
         // Production implementation (uncomment when backend is ready):
-        /*
-        const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.speciesLocations}/${speciesId}/locations`)
-        
+        const response = await fetch(
+            `${API_BASE_URL}${API_ENDPOINTS.speciesLocations}/${speciesId}`
+        )
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
         }
-        
+
         const data: LocationsResponse = await response.json()
-        
+
         if (!data.success) {
-            throw new Error(data.message || 'Failed to fetch species locations')
+            throw new Error(data.message || "Failed to fetch species locations")
         }
-        
+
         return data.data
-        */
     } catch (error) {
         console.error(
             `Error fetching locations for species ${speciesId}:`,
@@ -130,24 +130,24 @@ export async function getSpeciesById(
 ): Promise<Species | null> {
     try {
         // For development, using mock implementation
-        return await mockGetSpeciesById(speciesId)
+        // return await mockGetSpeciesById(speciesId)
 
         // Production implementation (uncomment when backend is ready):
-        /*
-        const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.speciesDetail}/${speciesId}`)
-        
+        const response = await fetch(
+            `${API_BASE_URL}${API_ENDPOINTS.speciesDetail}/${speciesId}`
+        )
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
         }
-        
+
         const data: SpeciesDetailResponse = await response.json()
-        
+
         if (!data.success) {
-            throw new Error(data.message || 'Failed to fetch species detail')
+            throw new Error(data.message || "Failed to fetch species detail")
         }
-        
+
         return data.data
-        */
     } catch (error) {
         console.error(`Error fetching species ${speciesId}:`, error)
         return null
@@ -212,34 +212,37 @@ export async function getAllSpeciesAndLocations(): Promise<{
 /**
  * Tạo location mới
  */
-export async function createLocation(
-    locationData: LocationCreate
-): Promise<{
+export async function createLocation(locationData: LocationCreate): Promise<{
     success: boolean
     data: Location | null
     message: string
 }> {
     try {
         // For development, using mock implementation
-        return await mockCreateLocation(locationData)
+        // return await mockCreateLocation(locationData)
 
         // Production implementation (uncomment when backend is ready):
-        /*
-        const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.locations}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(locationData)
-        })
-        
+        const response = await fetch(
+            `${API_BASE_URL}${API_ENDPOINTS.locations}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(locationData)
+            }
+        )
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
         }
-        
+
         const result = await response.json()
-        return result
-        */
+        return {
+            success: true,
+            data: result,
+            message: result.message || "Location created successfully"
+        }
     } catch (error) {
         console.error("Error creating location:", error)
         return {

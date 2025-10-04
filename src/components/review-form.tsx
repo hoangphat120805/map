@@ -21,6 +21,7 @@ export default function ReviewForm({
 }: ReviewFormProps) {
     const [rating, setRating] = useState(0)
     const [hoveredRating, setHoveredRating] = useState(0)
+    const [userName, setUserName] = useState("")
     const [comment, setComment] = useState("")
     const [selectedFiles, setSelectedFiles] = useState<File[]>([])
     const [previews, setPreviews] = useState<string[]>([])
@@ -111,6 +112,11 @@ export default function ReviewForm({
             return
         }
 
+        if (!userName.trim()) {
+            alert("Please enter your name")
+            return
+        }
+
         if (!comment.trim()) {
             alert("Please add a comment")
             return
@@ -122,6 +128,7 @@ export default function ReviewForm({
             const reviewData: ReviewSubmission = {
                 speciesId,
                 locationId,
+                userName: userName.trim(),
                 rating,
                 comment: comment.trim(),
                 images: selectedFiles
@@ -218,6 +225,22 @@ export default function ReviewForm({
                     )}
                 </div>
 
+                {/* User Name */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Your Name *
+                    </label>
+                    <input
+                        type="text"
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                        placeholder="Enter your name"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        maxLength={50}
+                        required
+                    />
+                </div>
+
                 {/* Comment */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -237,13 +260,12 @@ export default function ReviewForm({
                     </div>
                 </div>
 
-                {/* Image Upload */}
+                {/* Image Upload
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                         Photos (Optional)
                     </label>
 
-                    {/* Upload Area */}
                     <div
                         onDragOver={handleDragOver}
                         onDrop={handleDrop}
@@ -277,7 +299,6 @@ export default function ReviewForm({
                         className="hidden"
                     />
 
-                    {/* Image Previews */}
                     {previews.length > 0 && (
                         <div className="grid grid-cols-3 gap-2 mt-3">
                             {previews.map((preview, index) => (
@@ -298,7 +319,7 @@ export default function ReviewForm({
                             ))}
                         </div>
                     )}
-                </div>
+                </div> */}
 
                 {/* Submit Button */}
                 <div className="flex gap-2 pt-2">
@@ -313,7 +334,10 @@ export default function ReviewForm({
                     <button
                         type="submit"
                         disabled={
-                            isSubmitting || rating === 0 || !comment.trim()
+                            isSubmitting ||
+                            rating === 0 ||
+                            !userName.trim() ||
+                            !comment.trim()
                         }
                         className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                     >

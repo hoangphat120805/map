@@ -12,16 +12,11 @@ export interface UserReview {
     id: string
     speciesId: number
     locationId: number
-    userId: string
     userName: string
-    userAvatar?: string
-    rating: number // 1-5 stars
+    rating: number
     comment: string
     images: ReviewImage[]
-    timestamp: string // ISO date string
-    isVerified: boolean // Verified by admin/expert
-    helpfulCount: number // Number of users who found this review helpful
-    visitDate: string // When user visited the location
+    timestamp: string
 }
 
 export interface ReviewStats {
@@ -39,6 +34,7 @@ export interface ReviewStats {
 export interface ReviewSubmission {
     speciesId: number
     locationId: number
+    userName: string
     rating: number
     comment: string
     images: File[]
