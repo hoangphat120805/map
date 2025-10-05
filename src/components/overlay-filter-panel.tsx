@@ -7,9 +7,12 @@ import {
     Map as MapIcon,
     Calendar,
     Pin,
-    Pi
+    FileText,
+    ExternalLink,
+    BarChart3
 } from "lucide-react"
 import { MapOverlay, Location } from "@/types/api"
+import ChartModal from "@/components/chart-modal"
 
 interface OverlayFilterPanelProps {
     allOverlays: MapOverlay[]
@@ -28,6 +31,15 @@ export default function OverlayFilterPanel({
 }: OverlayFilterPanelProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const [searchQuery, setSearchQuery] = useState("")
+    const [chartModal, setChartModal] = useState<{
+        isOpen: boolean
+        chartUrls: string[]
+        overlayName: string
+    }>({
+        isOpen: false,
+        chartUrls: [],
+        overlayName: ""
+    })
 
     // Check if a location is within overlay bounds
     const isLocationInOverlay = (
@@ -74,6 +86,41 @@ export default function OverlayFilterPanel({
             : [...selectedOverlayIds, overlayId]
 
         onOverlayFilter(newSelection)
+    }
+
+    // Handle view report
+    const handleViewReport = (
+        event: React.MouseEvent,
+        reportUrl: string | undefined,
+        overlayName: string
+    ) => {
+        event.stopPropagation()
+        if (reportUrl) {
+            window.open(reportUrl, "_blank", "noopener,noreferrer")
+        }
+    }
+
+    // Handle view charts
+    const handleViewCharts = (
+        event: React.MouseEvent,
+        chartUrls: string[],
+        overlayName: string
+    ) => {
+        event.stopPropagation() // Prevent toggling checkbox when clicking chart button
+        setChartModal({
+            isOpen: true,
+            chartUrls,
+            overlayName
+        })
+    }
+
+    // Handle close chart modal
+    const handleCloseChartModal = () => {
+        setChartModal({
+            isOpen: false,
+            chartUrls: [],
+            overlayName: ""
+        })
     }
 
     // Handle select all overlays
@@ -245,11 +292,64 @@ export default function OverlayFilterPanel({
                                                         ? "s"
                                                         : ""}
                                                 </div>
-                                                {selectedOverlayIds.includes(
-                                                    overlay.id
-                                                ) && (
-                                                    <div className="text-xs text-blue-600 font-medium">
-                                                        ✓ Selected
+                                                {/* Action Buttons */}
+                                                {(overlay.reportUrl ||
+                                                    (overlay.chartUrls &&
+                                                        overlay.chartUrls
+                                                            .length > 0)) && (
+                                                    <div className="flex items-center gap-2s">
+                                                        {/* Charts Button - Only show if chartUrls exists and not empty */}
+                                                        {overlay.chartUrls &&
+                                                            overlay.chartUrls
+                                                                .length > 0 && (
+                                                                <button
+                                                                    onClick={(
+                                                                        e
+                                                                    ) =>
+                                                                        handleViewCharts(
+                                                                            e,
+                                                                            overlay.chartUrls!,
+                                                                            overlay.name
+                                                                        )
+                                                                    }
+                                                                    className="flex items-center gap-1 px-2 py-1 text-xs text-green-600 hover:text-green-800 hover:bg-green-50 rounded transition-colors"
+                                                                    title={`View charts for ${overlay.name}`}
+                                                                >
+                                                                    <BarChart3
+                                                                        size={
+                                                                            10
+                                                                        }
+                                                                    />
+                                                                    <span>
+                                                                        Charts
+                                                                    </span>
+                                                                </button>
+                                                            )}
+
+                                                        {/* Report Button - Only show if reportUrl exists */}
+                                                        {overlay.reportUrl && (
+                                                            <button
+                                                                onClick={(e) =>
+                                                                    handleViewReport(
+                                                                        e,
+                                                                        overlay.reportUrl,
+                                                                        overlay.name
+                                                                    )
+                                                                }
+                                                                className="flex items-center gap-1 px-2 py-1 text-xs text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors"
+                                                                title={`View report for ${overlay.name}`}
+                                                            >
+                                                                <FileText
+                                                                    size={10}
+                                                                />
+                                                                <span>
+                                                                    Report
+                                                                </span>
+                                                                <ExternalLink
+                                                                    size={8}
+                                                                />
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>
@@ -267,6 +367,14 @@ export default function OverlayFilterPanel({
                     </div>
                 </div>
             )}
+
+            {/* Chart Modal */}
+            <ChartModal
+                isOpen={chartModal.isOpen}
+                onClose={handleCloseChartModal}
+                chartUrls={chartModal.chartUrls}
+                overlayName={chartModal.overlayName}
+            />
         </div>
     )
 }
