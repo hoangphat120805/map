@@ -21,7 +21,12 @@ interface OverlayFilterPanelProps {
     allLocations: Location[]
     selectedOverlayIds: number[]
     onOverlayFilter: (overlayIds: number[]) => void
-    onRegionFocus?: (bounds: { minLon: number; maxLon: number; minLat: number; maxLat: number }) => void
+    onRegionFocus?: (bounds: {
+        minLon: number
+        maxLon: number
+        minLat: number
+        maxLat: number
+    }) => void
     className?: string
 }
 
@@ -286,11 +291,13 @@ export default function OverlayFilterPanel({
                                             className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 mt-1"
                                         />
                                         <div className="flex-1 min-w-0">
-                                            <div 
+                                            <div
                                                 className="text-sm font-semibold text-gray-800 mb-1 cursor-pointer hover:text-blue-600 transition-colors"
                                                 onClick={(e) => {
                                                     e.stopPropagation()
-                                                    handleRegionNameClick(overlay)
+                                                    handleRegionNameClick(
+                                                        overlay
+                                                    )
                                                 }}
                                                 title={`Focus on ${overlay.name} region`}
                                             >

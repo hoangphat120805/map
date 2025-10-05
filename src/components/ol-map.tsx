@@ -41,7 +41,12 @@ interface OLMapProps {
     overlayVisible?: boolean // Control overlay visibility
     onToggleOverlay?: () => void // Toggle overlay callback
     selectedOverlayIds?: number[] // IDs of selected overlays to show
-    focusOnBounds?: { minLon: number; maxLon: number; minLat: number; maxLat: number } | null // Bounds to focus on
+    focusOnBounds?: {
+        minLon: number
+        maxLon: number
+        minLat: number
+        maxLat: number
+    } | null // Bounds to focus on
 }
 
 export default function OLMap({
@@ -342,11 +347,11 @@ export default function OLMap({
         if (map && focusOnBounds) {
             const view = map.getView()
             const { minLon, maxLon, minLat, maxLat } = focusOnBounds
-            
+
             // Calculate center of bounds
             const centerLon = (minLon + maxLon) / 2
             const centerLat = (minLat + maxLat) / 2
-            
+
             // Set center and zoom level 10 as requested
             view.animate({
                 center: fromLonLat([centerLon, centerLat]),
