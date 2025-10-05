@@ -47,6 +47,13 @@ export default function Home() {
         displayName: string
     } | null>(null) // Search result location with marker
 
+    const [focusBounds, setFocusBounds] = useState<{
+        minLon: number
+        maxLon: number
+        minLat: number
+        maxLat: number
+    } | null>(null) // Bounds to focus map on when clicking region names
+
     const [loading, setLoading] = useState(true)
 
     // Load initial data
@@ -149,6 +156,17 @@ export default function Home() {
 
     const handleToggleOverlay = () => {
         setOverlayVisible((prev) => !prev)
+    }
+
+    const handleRegionFocus = (bounds: {
+        minLon: number
+        maxLon: number
+        minLat: number
+        maxLat: number
+    }) => {
+        setFocusBounds({ ...bounds })
+        // Clear focus bounds after a short delay to allow the map to respond
+        setTimeout(() => setFocusBounds(null), 100)
     }
 
     const handleDateSelect = (dates: string[]) => {
@@ -260,6 +278,7 @@ export default function Home() {
                 overlayVisible={overlayVisible}
                 onToggleOverlay={handleToggleOverlay}
                 selectedOverlayIds={selectedOverlayIds}
+                focusOnBounds={focusBounds}
                 className="h-full w-full"
             />
 
@@ -278,6 +297,7 @@ export default function Home() {
                     allLocations={allLocations}
                     selectedOverlayIds={selectedOverlayIds}
                     onOverlayFilter={handleOverlayFilter}
+                    onRegionFocus={handleRegionFocus}
                 />
             </div>
 

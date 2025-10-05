@@ -9,16 +9,19 @@ import {
     Pin,
     FileText,
     ExternalLink,
-    BarChart3
+    BarChart3,
+    TrendingUp
 } from "lucide-react"
 import { MapOverlay, Location } from "@/types/api"
 import ChartModal from "@/components/chart-modal"
+import PredictModal from "@/components/predict-modal"
 
 interface OverlayFilterPanelProps {
     allOverlays: MapOverlay[]
     allLocations: Location[]
     selectedOverlayIds: number[]
     onOverlayFilter: (overlayIds: number[]) => void
+    onRegionFocus?: (bounds: { minLon: number; maxLon: number; minLat: number; maxLat: number }) => void
     className?: string
 }
 
@@ -27,6 +30,7 @@ export default function OverlayFilterPanel({
     allLocations,
     selectedOverlayIds,
     onOverlayFilter,
+    onRegionFocus,
     className = "w-sm bg-white rounded-lg shadow-lg border border-gray-300"
 }: OverlayFilterPanelProps) {
     const [isExpanded, setIsExpanded] = useState(false)
@@ -38,6 +42,16 @@ export default function OverlayFilterPanel({
     }>({
         isOpen: false,
         chartUrls: [],
+        overlayName: ""
+    })
+
+    const [predictModal, setPredictModal] = useState<{
+        isOpen: boolean
+        predictUrls: string[]
+        overlayName: string
+    }>({
+        isOpen: false,
+        predictUrls: [],
         overlayName: ""
     })
 
@@ -121,6 +135,36 @@ export default function OverlayFilterPanel({
             chartUrls: [],
             overlayName: ""
         })
+    }
+
+    // Handle view predictions
+    const handleViewPredictions = (
+        event: React.MouseEvent,
+        predictUrls: string[],
+        overlayName: string
+    ) => {
+        event.stopPropagation() // Prevent toggling checkbox when clicking predict button
+        setPredictModal({
+            isOpen: true,
+            predictUrls,
+            overlayName
+        })
+    }
+
+    // Handle close predict modal
+    const handleClosePredictModal = () => {
+        setPredictModal({
+            isOpen: false,
+            predictUrls: [],
+            overlayName: ""
+        })
+    }
+
+    // Handle region focus when clicking on region name
+    const handleRegionNameClick = (overlay: MapOverlay) => {
+        if (onRegionFocus) {
+            onRegionFocus(overlay.bounds)
+        }
     }
 
     // Handle select all overlays
@@ -242,7 +286,14 @@ export default function OverlayFilterPanel({
                                             className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 mt-1"
                                         />
                                         <div className="flex-1 min-w-0">
-                                            <div className="text-sm font-semibold text-gray-800 mb-1">
+                                            <div 
+                                                className="text-sm font-semibold text-gray-800 mb-1 cursor-pointer hover:text-blue-600 transition-colors"
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    handleRegionNameClick(overlay)
+                                                }}
+                                                title={`Focus on ${overlay.name} region`}
+                                            >
                                                 {overlay.name}
                                             </div>
 
@@ -286,8 +337,7 @@ export default function OverlayFilterPanel({
                                                     className="text-gray-400 flex-shrink-0"
                                                 />
                                                 <div className="text-xs text-gray-500">
-                                                    {overlay.locationCount}{" "}
-                                                    location
+                                                    {overlay.locationCount} loc
                                                     {overlay.locationCount !== 1
                                                         ? "s"
                                                         : ""}
@@ -296,6 +346,9 @@ export default function OverlayFilterPanel({
                                                 {(overlay.reportUrl ||
                                                     (overlay.chartUrls &&
                                                         overlay.chartUrls
+                                                            .length > 0) ||
+                                                    (overlay.predictUrls &&
+                                                        overlay.predictUrls
                                                             .length > 0)) && (
                                                     <div className="flex items-center gap-2s">
                                                         {/* Charts Button - Only show if chartUrls exists and not empty */}
@@ -322,6 +375,34 @@ export default function OverlayFilterPanel({
                                                                     />
                                                                     <span>
                                                                         Charts
+                                                                    </span>
+                                                                </button>
+                                                            )}
+
+                                                        {/* Predict Button - Only show if predictUrls exists and not empty */}
+                                                        {overlay.predictUrls &&
+                                                            overlay.predictUrls
+                                                                .length > 0 && (
+                                                                <button
+                                                                    onClick={(
+                                                                        e
+                                                                    ) =>
+                                                                        handleViewPredictions(
+                                                                            e,
+                                                                            overlay.predictUrls!,
+                                                                            overlay.name
+                                                                        )
+                                                                    }
+                                                                    className="flex items-center gap-1 px-2 py-1 text-xs text-purple-600 hover:text-purple-800 hover:bg-purple-50 rounded transition-colors"
+                                                                    title={`View predictions for ${overlay.name}`}
+                                                                >
+                                                                    <TrendingUp
+                                                                        size={
+                                                                            10
+                                                                        }
+                                                                    />
+                                                                    <span>
+                                                                        Predict
                                                                     </span>
                                                                 </button>
                                                             )}
@@ -374,6 +455,14 @@ export default function OverlayFilterPanel({
                 onClose={handleCloseChartModal}
                 chartUrls={chartModal.chartUrls}
                 overlayName={chartModal.overlayName}
+            />
+
+            {/* Predict Modal */}
+            <PredictModal
+                isOpen={predictModal.isOpen}
+                onClose={handleClosePredictModal}
+                predictUrls={predictModal.predictUrls}
+                overlayName={predictModal.overlayName}
             />
         </div>
     )

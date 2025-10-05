@@ -41,6 +41,7 @@ interface OLMapProps {
     overlayVisible?: boolean // Control overlay visibility
     onToggleOverlay?: () => void // Toggle overlay callback
     selectedOverlayIds?: number[] // IDs of selected overlays to show
+    focusOnBounds?: { minLon: number; maxLon: number; minLat: number; maxLat: number } | null // Bounds to focus on
 }
 
 export default function OLMap({
@@ -59,7 +60,8 @@ export default function OLMap({
     overlays = [],
     overlayVisible = true,
     onToggleOverlay,
-    selectedOverlayIds = []
+    selectedOverlayIds = [],
+    focusOnBounds = null
 }: OLMapProps) {
     const mapRef = useRef<HTMLDivElement>(null)
     const [map, setMap] = useState<Map | null>(null)
@@ -334,6 +336,25 @@ export default function OLMap({
             view.setZoom(zoom)
         }
     }, [map, zoom])
+
+    // Focus on bounds when focusOnBounds prop changes
+    useEffect(() => {
+        if (map && focusOnBounds) {
+            const view = map.getView()
+            const { minLon, maxLon, minLat, maxLat } = focusOnBounds
+            
+            // Calculate center of bounds
+            const centerLon = (minLon + maxLon) / 2
+            const centerLat = (minLat + maxLat) / 2
+            
+            // Set center and zoom level 10 as requested
+            view.animate({
+                center: fromLonLat([centerLon, centerLat]),
+                zoom: 10,
+                duration: 1000 // Smooth animation over 1 second
+            })
+        }
+    }, [map, focusOnBounds])
 
     // Initialize overlay layer when map and overlays are first available
 

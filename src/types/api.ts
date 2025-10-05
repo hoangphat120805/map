@@ -124,6 +124,7 @@ export interface MapOverlay {
     endDate: string
     reportUrl?: string
     chartUrls?: string[] // Array of chart URLs (images and GIFs)
+    predictUrls?: string[] // Array of prediction image URLs
     bounds: {
         minLon: number
         maxLon: number

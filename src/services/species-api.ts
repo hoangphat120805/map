@@ -345,6 +345,7 @@ async function mockGetAllSpecies(): Promise<Species[]> {
             speciesId: 48225,
             name: "California poppy",
             scientificName: "Eschscholzia californica",
+            videoUrl: "/Garden_Blooming_VR_Video_Generation.mp4",
             description:
                 "http://en.wikipedia.org/wiki/Eschscholzia_californica",
             imageUrl:
@@ -481,321 +482,413 @@ async function mockGetAllLocations(): Promise<Location[]> {
     await new Promise((resolve) => setTimeout(resolve, 200))
 
     return [
-        // Cherry Blossom locations
+        // ====================================================================
+        // REGION 1: Anza-Borrego Desert State Park, Antelope Valley (2024 April)
+        // Bounds: minLon: -118.4182, maxLon: -118.3138, minLat: 34.6969, maxLat: 34.7929
+        // Species: California Poppy (48225), Goldfields (50987)
+        // ====================================================================
         {
             id: 1,
-            speciesId: 50164,
-            locationName: "Hanoi Cherry Garden",
-            coordinates: [-118.44, 34.764],
+            speciesId: 48225, // California poppy
+            locationName: "Antelope Valley Poppy Reserve West",
+            coordinates: [-118.3901, 34.7511],
             bloomingPeriod: {
-                start: "2025-03-15",
-                peak: "2025-04-05",
-                end: "2025-04-25"
+                start: "2024-03-15",
+                peak: "2024-04-09",
+                end: "2024-05-15"
             }
         },
         {
             id: 2,
-            speciesId: 1,
-            locationName: "Hue Imperial City",
-            coordinates: [108.2022, 16.0545],
+            speciesId: 48225, // California poppy
+            locationName: "Anza-Borrego Poppy Field Central",
+            coordinates: [-118.3654, 34.7412],
             bloomingPeriod: {
-                start: "2025-03-10",
-                peak: "2025-03-30",
-                end: "2025-04-20"
+                start: "2024-03-20",
+                peak: "2024-04-09",
+                end: "2024-05-10"
             }
         },
         {
             id: 3,
-            speciesId: 1,
-            locationName: "Ho Chi Minh City Park",
-            coordinates: [106.6297, 10.8231],
+            speciesId: 50987, // California goldfields
+            locationName: "Antelope Valley Goldfields North",
+            coordinates: [-118.3423, 34.7687],
             bloomingPeriod: {
-                start: "2025-02-20",
-                peak: "2025-03-15",
-                end: "2025-04-10"
+                start: "2024-03-25",
+                peak: "2024-04-09",
+                end: "2024-04-30"
             }
         },
-
-        // Sunflower locations
         {
             id: 4,
-            speciesId: 2,
-            locationName: "Dong Anh Sunflower Field",
-            coordinates: [105.6189, 21.0245],
+            speciesId: 50987, // California goldfields
+            locationName: "Desert State Park Goldfields",
+            coordinates: [-118.3789, 34.7789],
             bloomingPeriod: {
-                start: "2025-06-01",
-                peak: "2025-07-15",
-                end: "2025-09-15"
+                start: "2024-03-30",
+                peak: "2024-04-09",
+                end: "2024-05-05"
             }
         },
         {
             id: 5,
-            speciesId: 2,
-            locationName: "Quang Tri Sunflower Valley",
-            coordinates: [107.565, 16.4637],
+            speciesId: 48225, // California poppy
+            locationName: "Anza-Borrego Poppy Meadow East",
+            coordinates: [-118.3298, 34.7534],
             bloomingPeriod: {
-                start: "2025-05-15",
-                peak: "2025-07-01",
-                end: "2025-08-30"
+                start: "2024-04-01",
+                peak: "2024-04-09",
+                end: "2024-05-20"
             }
         },
         {
             id: 6,
-            speciesId: 2,
-            locationName: "Binh Duong Sunflower Farm",
-            coordinates: [106.978, 10.8142],
+            speciesId: 48225, // California poppy
+            locationName: "Antelope Valley Poppy Ridge South",
+            coordinates: [-118.4067, 34.7678],
             bloomingPeriod: {
-                start: "2025-06-10",
-                peak: "2025-08-01",
-                end: "2025-09-20"
+                start: "2024-03-18",
+                peak: "2024-04-09",
+                end: "2024-05-12"
             }
         },
-
-        // Lotus locations
         {
             id: 7,
-            speciesId: 3,
-            locationName: "West Lake Lotus Pond",
-            coordinates: [105.8019, 20.9801],
+            speciesId: 50987, // California goldfields
+            locationName: "Desert Park Goldfield Plains",
+            coordinates: [-118.3567, 34.7798],
             bloomingPeriod: {
-                start: "2025-05-01",
-                peak: "2025-07-01",
-                end: "2025-08-31"
+                start: "2024-04-02",
+                peak: "2024-04-09",
+                end: "2024-05-08"
             }
         },
         {
             id: 8,
-            speciesId: 3,
-            locationName: "Perfume River Lotus",
-            coordinates: [108.1435, 16.4621],
+            speciesId: 48225, // California poppy
+            locationName: "Anza Valley Poppy Slopes",
+            coordinates: [-118.3555, 34.7256],
             bloomingPeriod: {
-                start: "2025-04-20",
-                peak: "2025-06-15",
-                end: "2025-08-15"
+                start: "2024-03-22",
+                peak: "2024-04-09",
+                end: "2024-05-18"
             }
         },
         {
             id: 9,
-            speciesId: 3,
-            locationName: "Mekong Delta Lotus Field",
-            coordinates: [105.7851, 10.0451],
+            speciesId: 50987, // California goldfields
+            locationName: "Borrego Goldfield Canyon",
+            coordinates: [-118.4123, 34.7567],
             bloomingPeriod: {
-                start: "2025-05-10",
-                peak: "2025-07-20",
-                end: "2025-09-05"
+                start: "2024-03-28",
+                peak: "2024-04-09",
+                end: "2024-05-02"
             }
         },
 
-        // Lavender locations
-        {
-            id: 10,
-            speciesId: 4,
-            locationName: "Da Lat Lavender Farm",
-            coordinates: [108.4265, 15.8742],
-            bloomingPeriod: {
-                start: "2025-06-15",
-                peak: "2025-07-20",
-                end: "2025-08-30"
-            }
-        },
-        {
-            id: 11,
-            speciesId: 4,
-            locationName: "Sapa Lavender Garden",
-            coordinates: [103.97, 22.4856],
-            bloomingPeriod: {
-                start: "2025-06-01",
-                peak: "2025-07-10",
-                end: "2025-08-20"
-            }
-        },
-
-        // Rose locations
-        {
-            id: 12,
-            speciesId: 5,
-            locationName: "Hanoi Rose Garden",
-            coordinates: [105.8445, 21.0325],
-            bloomingPeriod: {
-                start: "2025-04-01",
-                peak: "2025-06-01",
-                end: "2025-10-31"
-            }
-        },
-        {
-            id: 13,
-            speciesId: 5,
-            locationName: "Hue Royal Rose Park",
-            coordinates: [108.2208, 16.0578],
-            bloomingPeriod: {
-                start: "2025-03-20",
-                peak: "2025-05-15",
-                end: "2025-11-10"
-            }
-        },
-        {
-            id: 14,
-            speciesId: 5,
-            locationName: "Saigon Rose Valley",
-            coordinates: [106.7009, 10.7756],
-            bloomingPeriod: {
-                start: "2025-04-10",
-                peak: "2025-06-20",
-                end: "2025-10-20"
-            }
-        },
-        {
-            id: 15,
-            speciesId: 5,
-            locationName: "Da Lat Rose Garden",
-            coordinates: [108.4582, 15.8654],
-            bloomingPeriod: {
-                start: "2025-03-25",
-                peak: "2025-05-30",
-                end: "2025-11-05"
-            }
-        },
-
-        // Los Angeles Area Locations (within overlay bounds: -118.46 to -118.26, 34.66 to 34.8)
-        // Cherry Blossom locations in LA
-        {
-            id: 16,
-            speciesId: 1,
-            locationName: "West Hollywood Cherry Park",
-            coordinates: [-118.3648, 34.7184],
-            bloomingPeriod: {
-                start: "2025-03-01",
-                peak: "2025-03-20",
-                end: "2025-04-15"
-            }
-        },
-        {
-            id: 17,
-            speciesId: 1,
-            locationName: "Beverly Hills Cherry Grove",
-            coordinates: [-118.4052, 34.7089],
-            bloomingPeriod: {
-                start: "2025-02-25",
-                peak: "2025-03-18",
-                end: "2025-04-10"
-            }
-        },
+        // ====================================================================
+        // REGION 3: Walker Canyon, Lake Elsinore (2019 March)
+        // Bounds: minLon: -117.4612, maxLon: -117.3359, minLat: 33.71, maxLat: 33.7994
+        // Species: Lupine (50614, 61010, 62691), Phacelia/Canterbury Bells (569596)
+        // ====================================================================
         {
             id: 18,
-            speciesId: 1,
-            locationName: "Sunset Strip Cherry Trees",
-            coordinates: [-118.3851, 34.7381],
+            speciesId: 50614, // Miniature Lupine
+            locationName: "Walker Canyon Lupine Trail North",
+            coordinates: [-117.4234, 33.7654],
             bloomingPeriod: {
-                start: "2025-03-05",
-                peak: "2025-03-25",
-                end: "2025-04-20"
+                start: "2019-02-15",
+                peak: "2019-03-25",
+                end: "2019-04-30"
             }
         },
-
-        // Sunflower locations in LA
         {
             id: 19,
-            speciesId: 2,
-            locationName: "Hollywood Hills Sunflower Field",
-            coordinates: [-118.3395, 34.7095],
+            speciesId: 61010, // coastal bush lupine
+            locationName: "Lake Elsinore Lupine Hills",
+            coordinates: [-117.3876, 33.7432],
             bloomingPeriod: {
-                start: "2025-07-01",
-                peak: "2025-08-15",
-                end: "2025-09-30"
+                start: "2019-03-01",
+                peak: "2019-03-25",
+                end: "2019-05-10"
             }
         },
         {
             id: 20,
-            speciesId: 2,
-            locationName: "Santa Monica Sunflower Meadow",
-            coordinates: [-118.4345, 34.7278],
+            speciesId: 62691, // silvery lupine
+            locationName: "Walker Canyon Silvery Lupine Field",
+            coordinates: [-117.4089, 33.7789],
             bloomingPeriod: {
-                start: "2025-06-20",
-                peak: "2025-08-01",
-                end: "2025-09-20"
+                start: "2019-03-10",
+                peak: "2019-03-25",
+                end: "2019-05-15"
             }
         },
-
-        // Lotus locations in LA
         {
             id: 21,
-            speciesId: 3,
-            locationName: "Century City Lotus Pond",
-            coordinates: [-118.4107, 34.7582],
+            speciesId: 569596, // Cape daisy (representing Canterbury Bells)
+            locationName: "Elsinore Canterbury Bells Meadow",
+            coordinates: [-117.37, 33.72],
             bloomingPeriod: {
-                start: "2025-05-15",
-                peak: "2025-07-10",
-                end: "2025-09-15"
+                start: "2019-03-05",
+                peak: "2019-03-25",
+                end: "2019-04-25"
             }
         },
         {
             id: 22,
-            speciesId: 3,
-            locationName: "Fairfax Lotus Garden",
-            coordinates: [-118.3653, 34.7491],
+            speciesId: 50614, // Miniature Lupine
+            locationName: "Walker Canyon Blue Lupine Valley",
+            coordinates: [-117.4456, 33.7876],
             bloomingPeriod: {
-                start: "2025-05-01",
-                peak: "2025-06-25",
-                end: "2025-08-30"
+                start: "2019-03-15",
+                peak: "2019-03-25",
+                end: "2019-05-01"
             }
         },
-
-        // Lavender locations in LA
         {
             id: 23,
-            speciesId: 4,
-            locationName: "Melrose Lavender Gardens",
-            coordinates: [-118.3712, 34.6895],
+            speciesId: 61010, // coastal bush lupine
+            locationName: "Lake Elsinore Coastal Lupine Ridge",
+            coordinates: [-117.3567, 33.7923],
             bloomingPeriod: {
-                start: "2025-04-15",
-                peak: "2025-07-01",
-                end: "2025-09-30"
+                start: "2019-02-28",
+                peak: "2019-03-25",
+                end: "2019-05-08"
             }
         },
         {
             id: 24,
-            speciesId: 4,
-            locationName: "West Hollywood Lavender Park",
-            coordinates: [-118.3801, 34.7136],
+            speciesId: 62691, // silvery lupine
+            locationName: "Walker Canyon Silver Lupine Mesa",
+            coordinates: [-117.4312, 33.7789],
             bloomingPeriod: {
-                start: "2025-04-20",
-                peak: "2025-06-30",
-                end: "2025-10-15"
+                start: "2019-03-12",
+                peak: "2019-03-25",
+                end: "2019-05-12"
             }
         },
-
-        // Rose locations in LA
         {
             id: 25,
-            speciesId: 5,
-            locationName: "Beverly Hills Rose Garden",
-            coordinates: [-118.4087, 34.7181],
+            speciesId: 569596, // Cape daisy (representing Canterbury Bells)
+            locationName: "Elsinore Canterbury Bell Slopes East",
+            coordinates: [-117.3498, 33.7845],
             bloomingPeriod: {
-                start: "2025-04-01",
-                peak: "2025-06-15",
-                end: "2025-11-30"
+                start: "2019-03-08",
+                peak: "2019-03-25",
+                end: "2019-04-28"
             }
         },
         {
             id: 26,
-            speciesId: 5,
-            locationName: "Hollywood Rose Collection",
-            coordinates: [-118.3348, 34.7394],
+            speciesId: 50614, // Miniature Lupine
+            locationName: "Walker Canyon Miniature Lupine Garden",
+            coordinates: [-117.4123, 33.7345],
             bloomingPeriod: {
-                start: "2025-03-20",
-                peak: "2025-05-25",
-                end: "2025-11-15"
+                start: "2019-03-18",
+                peak: "2019-03-25",
+                end: "2019-05-03"
             }
         },
         {
             id: 27,
-            speciesId: 5,
-            locationName: "Santa Monica Rose Gardens",
-            coordinates: [-118.4323, 34.7548],
+            speciesId: 61010, // coastal bush lupine
+            locationName: "Lake Elsinore Bush Lupine Canyon",
+            coordinates: [-117.3723, 33.7567],
             bloomingPeriod: {
-                start: "2025-03-15",
-                peak: "2025-05-20",
-                end: "2025-11-10"
+                start: "2019-02-25",
+                peak: "2019-03-25",
+                end: "2019-05-15"
+            }
+        },
+
+        // ====================================================================
+        // REGION 4: Anza-Borrego (2019 February)
+        // Bounds: minLon: -116.3545, maxLon: -116.2726, minLat: 33.1534, maxLat: 33.2137
+        // Species: Desert Sand Verbena (50164), Desert Lily (using 542062 Rock Purslane as similar)
+        // ====================================================================
+        {
+            id: 28,
+            speciesId: 50164, // desert sand verbena
+            locationName: "Anza-Borrego Sand Verbena Wash",
+            coordinates: [-116.3234, 33.1823],
+            bloomingPeriod: {
+                start: "2019-01-20",
+                peak: "2019-02-15",
+                end: "2019-04-10"
+            }
+        },
+        {
+            id: 29,
+            speciesId: 50164, // desert sand verbena
+            locationName: "Borrego Desert Verbena Dunes",
+            coordinates: [-116.2987, 33.1967],
+            bloomingPeriod: {
+                start: "2019-02-01",
+                peak: "2019-02-15",
+                end: "2019-03-30"
+            }
+        },
+        {
+            id: 30,
+            speciesId: 542062, // Rock Purslane (representing Desert Lily)
+            locationName: "Anza-Borrego Desert Lily Grove",
+            coordinates: [-116.3123, 33.1611],
+            bloomingPeriod: {
+                start: "2019-02-10",
+                peak: "2019-02-15",
+                end: "2019-04-15"
+            }
+        },
+        {
+            id: 31,
+            speciesId: 542062, // Rock Purslane (representing Desert Lily)
+            locationName: "Borrego Springs Desert Lily Field",
+            coordinates: [-116.2834, 33.2023],
+            bloomingPeriod: {
+                start: "2019-01-25",
+                peak: "2019-02-15",
+                end: "2019-03-25"
+            }
+        },
+        {
+            id: 32,
+            speciesId: 50164, // desert sand verbena
+            locationName: "Anza Desert Verbena Canyon East",
+            coordinates: [-116.2789, 33.1756],
+            bloomingPeriod: {
+                start: "2019-01-28",
+                peak: "2019-02-15",
+                end: "2019-04-05"
+            }
+        },
+        {
+            id: 33,
+            speciesId: 542062, // Rock Purslane (representing Desert Lily)
+            locationName: "Borrego Desert Lily Valley North",
+            coordinates: [-116.3456, 33.2089],
+            bloomingPeriod: {
+                start: "2019-02-05",
+                peak: "2019-02-15",
+                end: "2019-04-12"
+            }
+        },
+        {
+            id: 34,
+            speciesId: 50164, // desert sand verbena
+            locationName: "Anza-Borrego Sand Verbena Mesa",
+            coordinates: [-116.3378, 33.1589],
+            bloomingPeriod: {
+                start: "2019-01-22",
+                peak: "2019-02-15",
+                end: "2019-03-28"
+            }
+        },
+        {
+            id: 35,
+            speciesId: 542062, // Rock Purslane (representing Desert Lily)
+            locationName: "Borrego Springs Lily Garden South",
+            coordinates: [-116.2923, 33.1609],
+            bloomingPeriod: {
+                start: "2019-02-08",
+                peak: "2019-02-15",
+                end: "2019-04-18"
+            }
+        },
+
+        // ====================================================================
+        // REGION 5: Atacama Desert, Chile (2019 July)
+        // Bounds: minLon: -69.4799, maxLon: -69.4125, minLat: -23.9835, maxLat: -23.9303
+        // Species: Pata de Guanaco (using 76662 Cape marigold), Suspiro de Campo (using 119207 rain daisy)
+        // Note: Coordinates corrected to negative values for Chile (Western & Southern Hemisphere)
+        // ====================================================================
+        {
+            id: 36,
+            speciesId: 76662, // Cape marigold (representing Pata de Guanaco)
+            locationName: "Atacama Pata de Guanaco Valley",
+            coordinates: [-69.4456, -23.9567], // Corrected to negative for Chile
+            bloomingPeriod: {
+                start: "2019-06-15",
+                peak: "2019-07-25",
+                end: "2019-09-10"
+            }
+        },
+        {
+            id: 37,
+            speciesId: 76662, // Cape marigold (representing Pata de Guanaco)
+            locationName: "Atacama Desert Guanaco Flower Field",
+            coordinates: [-69.452, -23.94], // Corrected to negative for Chile
+            bloomingPeriod: {
+                start: "2019-07-01",
+                peak: "2019-07-25",
+                end: "2019-08-30"
+            }
+        },
+        {
+            id: 38,
+            speciesId: 119207, // rain daisy (representing Suspiro de Campo)
+            locationName: "Atacama Suspiro de Campo Plains",
+            coordinates: [-69.4612, -23.9678], // Corrected to negative for Chile
+            bloomingPeriod: {
+                start: "2019-07-10",
+                peak: "2019-07-25",
+                end: "2019-09-05"
+            }
+        },
+        {
+            id: 39,
+            speciesId: 119207, // rain daisy (representing Suspiro de Campo)
+            locationName: "Atacama White Flower Meadow",
+            coordinates: [-69.4389, -23.9512], // Corrected to negative for Chile
+            bloomingPeriod: {
+                start: "2019-07-05",
+                peak: "2019-07-25",
+                end: "2019-08-25"
+            }
+        },
+        {
+            id: 40,
+            speciesId: 76662, // Cape marigold (representing Pata de Guanaco)
+            locationName: "Atacama Guanaco Flower Plateau West",
+            coordinates: [-69.4689, -23.9398], // Corrected to negative for Chile
+            bloomingPeriod: {
+                start: "2019-06-20",
+                peak: "2019-07-25",
+                end: "2019-09-05"
+            }
+        },
+        {
+            id: 41,
+            speciesId: 119207, // rain daisy (representing Suspiro de Campo)
+            locationName: "Atacama Suspiro Desert Garden",
+            coordinates: [-69.4298, -23.9734], // Corrected to negative for Chile
+            bloomingPeriod: {
+                start: "2019-07-12",
+                peak: "2019-07-25",
+                end: "2019-08-28"
+            }
+        },
+        {
+            id: 42,
+            speciesId: 76662, // Cape marigold (representing Pata de Guanaco)
+            locationName: "Atacama Pata de Guanaco Mesa East",
+            coordinates: [-69.4167, -23.9333], // Corrected to negative for Chile
+            bloomingPeriod: {
+                start: "2019-06-28",
+                peak: "2019-07-25",
+                end: "2019-09-12"
+            }
+        },
+        {
+            id: 43,
+            speciesId: 119207, // rain daisy (representing Suspiro de Campo)
+            locationName: "Atacama Suspiro Valley North",
+            coordinates: [-69.453, -23.9334], // Corrected to negative for Chile
+            bloomingPeriod: {
+                start: "2019-07-08",
+                peak: "2019-07-25",
+                end: "2019-09-02"
             }
         }
     ]
@@ -850,132 +943,68 @@ async function mockGetMapOverlays(): Promise<MapOverlay[]> {
             id: 1,
             name: "Anza-Borrego Desert State Park, Antelope Valley",
             address: "California, USA",
-            imageUrl: "/mask.svg",
+            imageUrl: "/region1/cluster_mask.svg",
             startDate: "2024-04-01",
             endDate: "2024-09-30",
-            reportUrl: "/exp.pdf",
-            chartUrls: [
-                "https://images.unsplash.com/photo-1522383225653-ed111181a951?w=600",
-                "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=600",
-                "https://media.giphy.com/media/26BRrSvJUa0crqw4E/giphy.gif",
-                "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600"
-            ],
+            reportUrl: "/region1/report.pdf",
+            chartUrls: ["region1/ndvi.gif"],
+            predictUrls: [],
             bounds: {
-                minLon: -118.44,
-                maxLon: -118.38,
-                minLat: 34.764,
-                maxLat: 34.88
-            }
-        },
-        {
-            id: 2,
-            name: "Carrizo Plain National Monument",
-            address: "California, USA",
-            imageUrl: "/mask.svg",
-            startDate: "2017-04-01",
-            endDate: "2017-04-30",
-            reportUrl: "/exp.pdf",
-            chartUrls: [
-                "https://images.unsplash.com/photo-1522383225653-ed111181a951?w=600",
-                "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=600",
-                "https://media.giphy.com/media/26BRrSvJUa0crqw4E/giphy.gif",
-                "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600"
-            ],
-            bounds: {
-                minLon: -119.94,
-                maxLon: -119.74,
-                minLat: 35.08,
-                maxLat: 35.18
+                minLon: -118.4182,
+                maxLon: -118.3138,
+                minLat: 34.6969,
+                maxLat: 34.7929
             }
         },
         {
             id: 3,
             name: "Walker Canyon, Lake Elsinore",
             address: "California, USA",
-            imageUrl: "/mask.svg",
+            imageUrl: "/region3/cluster_mask.svg",
             startDate: "2019-03-01",
             endDate: "2019-03-31",
-            reportUrl: "/exp.pdf",
-            chartUrls: [
-                "https://images.unsplash.com/photo-1522383225653-ed111181a951?w=600",
-                "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=600",
-                "https://media.giphy.com/media/26BRrSvJUa0crqw4E/giphy.gif",
-                "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600"
-            ],
+            chartUrls: ["region3/ndvi.gif"],
             bounds: {
-                minLon: -117.41,
-                maxLon: -117.39,
-                minLat: 33.72,
-                maxLat: 33.74
+                minLon: -117.4612,
+                maxLon: -117.3359,
+                minLat: 33.71,
+                maxLat: 33.7994
             }
         },
         {
             id: 4,
             name: "Anza-Borrego",
             address: "California, USA",
-            imageUrl: "/mask.svg",
+            imageUrl: "/region4/cluster_mask.svg",
             startDate: "2019-02-01",
             endDate: "2019-02-28",
-            reportUrl: "/exp.pdf",
-            chartUrls: [
-                "https://images.unsplash.com/photo-1522383225653-ed111181a951?w=600",
-                "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=600",
-                "https://media.giphy.com/media/26BRrSvJUa0crqw4E/giphy.gif",
-                "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600"
-            ],
+            chartUrls: ["region4/ndvi.gif"],
             bounds: {
-                minLon: -116.42,
-                maxLon: -116.38,
-                minLat: 33.25,
-                maxLat: 33.26
+                minLon: -116.3545,
+                maxLon: -116.2726,
+                minLat: 33.1534,
+                maxLat: 33.2137
             }
         },
         {
             id: 5,
             name: "Atacama Desert",
             address: "Chile",
-            imageUrl: "/mask.svg",
+            imageUrl: "/region5/cluster_mask.svg",
             startDate: "2019-07-01",
             endDate: "2019-07-31",
-            reportUrl: "/exp.pdf",
-            chartUrls: [
-                "https://images.unsplash.com/photo-1522383225653-ed111181a951?w=600",
-                "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=600",
-                "https://media.giphy.com/media/26BRrSvJUa0crqw4E/giphy.gif",
-                "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600"
-            ],
+            chartUrls: ["region5/ndvi.gif"],
             bounds: {
-                minLon: 69.42,
-                maxLon: 69.52,
-                minLat: 23.84,
-                maxLat: 23.94
-            }
-        },
-        {
-            id: 6,
-            name: "Namaqualand",
-            address: "Namibia",
-            imageUrl: "/mask.svg",
-            startDate: "2019-05-01",
-            endDate: "2019-05-31",
-            reportUrl: "/exp.pdf",
-            chartUrls: [
-                "https://images.unsplash.com/photo-1522383225653-ed111181a951?w=600",
-                "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=600",
-                "https://media.giphy.com/media/26BRrSvJUa0crqw4E/giphy.gif",
-                "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600"
-            ],
-            bounds: {
-                minLon: 15.32,
-                maxLon: 15.42,
-                minLat: 26.34,
-                maxLat: 26.44
+                minLon: -69.4799,
+                maxLon: -69.4125,
+                minLat: -23.9835,
+                maxLat: -23.9303
             }
         }
     ]
 }
 
-async function mockCreateLocation(locationData: Omit<Location, "id">): Promise<{
+async function mockCreateLocation(locationData: LocationCreate): Promise<{
     success: boolean
     data: Location | null
     message: string
